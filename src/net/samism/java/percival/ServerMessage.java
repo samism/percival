@@ -1,6 +1,6 @@
 package net.samism.java.percival;
 
-import net.samism.java.utils.StringUtil.StringUtil;
+import net.samism.java.StringUtils.StringUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +35,7 @@ public class ServerMessage extends IRCMessage {
 	@Override
 	public String getMsg() {
 		return msg.contains("PRIVMSG #lingubender")
-				? msg.substring(StringUtil.nthIndexOf(msg, ":", 2))
+				? msg.substring(StringUtils.nthIndexOf(msg, ":", 2))
 				: getRawMsg();
 	}
 

@@ -1,6 +1,6 @@
 package net.samism.java.percival;
 
-import org.samism.java.utils.StringUtil.StringUtil;
+import net.samism.java.StringUtils.StringUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +17,7 @@ public class CommandMessage extends IRCMessage {
 
 	@Override
 	public boolean isFrom(String author) {
-		return msg.substring(1, StringUtil.nthIndexOf(msg, "!", 1))
+		return msg.substring(1, StringUtils.nthIndexOf(msg, "!", 1))
 				.equals(author);
 	}
 
@@ -33,7 +33,7 @@ public class CommandMessage extends IRCMessage {
 
 	@Override
 	public String getMsg() {
-		return msg.substring(StringUtil.nthIndexOf(msg, ":", 2) + 1);
+		return msg.substring(StringUtils.nthIndexOf(msg, ":", 2) + 1);
 	}
 
 	@Override

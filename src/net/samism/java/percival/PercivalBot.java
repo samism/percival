@@ -1,5 +1,6 @@
 package net.samism.java.percival;
 
+import net.samism.java.StringUtils.StringUtils;
 import org.samism.java.utils.StringUtil.StringUtil;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class PercivalBot extends IRCBot {
 						}
 
 						//logging
-						if (StringUtil.getTokenCount(curLine, ":") > 1) {
+						if (StringUtils.getTokenCount(curLine, ":") > 1) {
 							assert msg != null;
 							pc.logConsole(">>> " + msg.getAuthor() + "|" + msg.getMsg());
 						}
