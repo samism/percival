@@ -1,7 +1,6 @@
 package net.samism.java.percival;
 
 import net.samism.java.StringUtils.StringUtils;
-import org.samism.java.utils.StringUtil.StringUtil;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
