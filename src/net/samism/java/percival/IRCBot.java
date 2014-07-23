@@ -15,8 +15,9 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static java.lang.System.out;
-import static java.lang.System.err;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +27,7 @@ import static java.lang.System.err;
  */
 
 public class IRCBot implements IRCFunctions {
+	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
 
 	public static final String OWNER = "ffs82defxp";
 
@@ -60,10 +62,10 @@ public class IRCBot implements IRCFunctions {
 					.getOutputStream()));
 			br = new BufferedReader(new InputStreamReader(irc.getInputStream()));
 		} catch (UnknownHostException e) {
-			err.println("No such host.");
+			log.info("No such host.");
 			e.printStackTrace();
 		} catch (IOException e) {
-			err.println("Error connecting to the host.");
+			log.info("Error connecting to the host.");
 			e.printStackTrace();
 		}
 	}
@@ -102,7 +104,7 @@ public class IRCBot implements IRCFunctions {
 	public void log(String line) {
 		// logs to console, file, and later gui, by default
 		// need to get file logging system working...
-		out.println("[" + getDate("H:mm:ss:SSS") + "]: " + line);
+		log.info("[" + getDate("H:mm:ss:SSS") + "]: " + line);
 
 		try {
 			if (LOGS_DIR.exists()) {
@@ -112,7 +114,7 @@ public class IRCBot implements IRCFunctions {
 					if (LOG_FILE.createNewFile()) {
 						fw = new FileWriter(LOG_FILE);
 					} else {
-						err.println("couldn't make log file");
+						log.info("couldn't make log file");
 					}
 				}
 			} else {
@@ -123,11 +125,11 @@ public class IRCBot implements IRCFunctions {
 						if (LOG_FILE.createNewFile()) {
 							fw = new FileWriter(LOG_FILE);
 						} else {
-							err.println("couldn't make log file");
+							log.info("couldn't make log file");
 						}
 					}
 				} else {
-					err.println("couldn't make logs directory");
+					log.info("couldn't make logs directory");
 				}
 			}
 
@@ -148,7 +150,7 @@ public class IRCBot implements IRCFunctions {
 
 	public void logConsole(String line) {
 		String date = getDate("H:mm:ss:SSS");
-		out.println("[" + date + "]" + line);
+		log.info("[" + date + "]" + line);
 	}
 
 	public void logToClient(String line) {

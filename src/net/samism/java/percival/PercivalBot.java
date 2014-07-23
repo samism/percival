@@ -1,6 +1,8 @@
 package net.samism.java.percival;
 
 import net.samism.java.StringUtils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -12,6 +14,8 @@ import java.util.regex.Pattern;
  * Time: Unknown
  */
 public class PercivalBot extends IRCBot {
+	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
+
 
 	private final ResponseHandler rHandler = new ResponseHandler(this);
 	private final Connection c = new PercivalBot.Connection(this);
