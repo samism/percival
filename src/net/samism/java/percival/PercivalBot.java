@@ -64,7 +64,7 @@ public class PercivalBot extends IRCBot {
 						if ((curLine.contains("PRIVMSG #lingubender") && commandIsPresent(curLine))) {
 							if (System.currentTimeMillis() - lastReplied >= 500) {
 								msg = new CommandMessage(curLine);
-								System.out.println(msg.toString());
+								log.info(msg.toString());
 								pc.sendChan(rHandler.getResponse(msg));
 								lastReplied = System.currentTimeMillis();
 							}
@@ -74,7 +74,7 @@ public class PercivalBot extends IRCBot {
 						} else if (curLine.contains("PING ") && !curLine.contains("PRIVMSG")) {
 							if (System.currentTimeMillis() - lastReplied >= 500) {
 								msg = new PingMessage(curLine);
-								System.out.println(msg.toString());
+								log.info(msg.toString());
 								pc.send(rHandler.getResponse(msg));
 								lastReplied = System.currentTimeMillis();
 							}
@@ -84,12 +84,10 @@ public class PercivalBot extends IRCBot {
 
 						//logging
 						if (StringUtils.getTokenCount(curLine, ":") > 1) {
-							assert msg != null;
 							pc.logConsole(">>> " + msg.getAuthor() + "|" + msg.getMsg());
 						}
 					}
-					Thread.sleep(1);
-					System.gc();
+					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
