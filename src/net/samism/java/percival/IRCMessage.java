@@ -10,6 +10,8 @@ public abstract class IRCMessage {
 
 	public abstract boolean isFromOwner();
 
+	public abstract String getResponse();
+
 	public abstract String getAuthor();
 
 	public abstract String getMsg();

@@ -14,6 +14,11 @@ public class PingMessage extends IRCMessage {
 	}
 
 	@Override
+	public String getResponse() {
+		return null;
+	}
+
+	@Override
 	public boolean isFrom(String author) {
 		System.out.println("called isFrom() on PingMessage");
 		return false;

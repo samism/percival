@@ -11,9 +11,13 @@ import net.samism.java.StringUtils.StringUtils;
 
 public class CasualMessage extends IRCMessage {
 
-	public CasualMessage(String s){
+	CasualMessage(String s) {
 		this.msg = s;
+	}
 
+	@Override
+	public String getResponse() {
+		return null;
 	}
 
 	@Override

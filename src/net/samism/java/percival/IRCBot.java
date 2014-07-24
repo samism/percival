@@ -62,11 +62,13 @@ public class IRCBot implements IRCFunctions {
 					.getOutputStream()));
 			br = new BufferedReader(new InputStreamReader(irc.getInputStream()));
 		} catch (UnknownHostException e) {
-			log.info("No such host.");
+			log.error("No such host.");
 			e.printStackTrace();
+			System.exit(0);
 		} catch (IOException e) {
-			log.info("Error connecting to the host.");
+			log.error("Error connecting to the host.");
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
@@ -168,8 +170,6 @@ public class IRCBot implements IRCFunctions {
 				fileContents += ln;
 
 			fileBr.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

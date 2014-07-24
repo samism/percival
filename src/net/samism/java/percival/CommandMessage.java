@@ -16,6 +16,11 @@ public class CommandMessage extends IRCMessage {
 	}
 
 	@Override
+	public String getResponse() {
+		return null;
+	}
+
+	@Override
 	public boolean isFrom(String author) {
 		return msg.substring(1, StringUtils.nthIndexOf(msg, "!", 1))
 				.equals(author);

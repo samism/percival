@@ -27,22 +27,17 @@ public class ResponseHandler {
 		String line = msg.getMsg();
 		String text = !(msg instanceof PingMessage) ? line.split(getPrefix(line))[1].trim() : line;
 
-		log.info("line = " + line + "\ntext = " + text);
+		//log.info("line = " + line + "\ntext = " + text);
 
 		StringBuilder response = new StringBuilder();
 
 		//time, owner, exit, help, hi
 		if (msg instanceof PingMessage) {
-			/*
-				PingMessage:
-			 */
 			response.append(line.contains(":")
 					? "PONG " + line.split(" ")[1]
 					: "PONG " + line.split(":")[1]);
 		} else if (msg instanceof CommandMessage) {
-			/*
-				CommandMessage:
-			 */
+			log.info("found a CommandMessage: " + msg.toString());
 			if (msg.isFromOwner() && (text.equalsIgnoreCase("show that you are mine!")
 					|| (text.equalsIgnoreCase("owner")))) {
 				response.append("I was written (in Java) by: " + IRCBot.OWNER);
@@ -64,8 +59,6 @@ public class ResponseHandler {
 					&& text.equalsIgnoreCase("exit"))) {
 				pc.logConsole("Exit requested by: " + msg.getAuthor());
 				System.exit(1);
-			} else {
-				response.append("Invalid command");
 			}
 		}
 

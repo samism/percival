@@ -27,15 +27,11 @@ public class PercivalBot extends IRCBot {
 		send("NICK " + getBotName());
 		send("USER " + getBotName() + " 0 * :" + getBotName());
 
-		c.setShouldConnect(true);
 		connection.start();
 	}
 
 	class Connection implements Runnable {
 		private final PercivalBot pc;
-		private boolean shouldConnect;
-
-		private boolean didPrelims = false;
 
 		private long lastReplied = System.currentTimeMillis();
 
@@ -44,83 +40,53 @@ public class PercivalBot extends IRCBot {
 		}
 
 		public void run() {
-			if (shouldConnect) {
 				try {
+					send("MODE " + getBotName() + " +B"); // for bots
+					send("PRIVMSG NickServ :identify 197676");
+					send("JOIN " + getChannelName());
+
 					String curLine;
 
 					while ((curLine = pc.getBr().readLine()) != null) {
-						IRCMessage msg = null;
+						Thread.sleep(250); //limit response time to 4 times a second
+						IRCMessage msg;
 
-						if (!didPrelims) {
-							if (curLine.contains("foonetic.net 376 Percival :End of /MOTD command.")
-									&& !curLine.contains("PRIVMSG")) {
-								send("MODE " + getBotName() + " +B"); // for bots
-								send("JOIN " + getChannelName());
-								send("PRIVMSG NickServ :identify 197676");
-								didPrelims = true;
-								log.info("Did initial stuff.");
-							}
-						}
-
-						if ((curLine.contains("PRIVMSG #lingubender") && commandIsPresent(curLine))) {
-							if (System.currentTimeMillis() - lastReplied >= 500) {
-								msg = new CommandMessage(curLine);
-								log.info(msg.toString());
-								pc.sendChan(rHandler.getResponse(msg));
-								lastReplied = System.currentTimeMillis();
-							}
-						} else if (curLine.contains("PRIVMSG #lingubender")) {
+						if (curLine.contains("PRIVMSG " + pc.getChannelName()) && commandIsPresent(curLine)) {
+							msg = new CommandMessage(curLine);
+							pc.sendChan(msg.getResponse());
+							lastReplied = System.currentTimeMillis();
+						} else if (curLine.contains("PING ") && !curLine.contains("PRIVMSG")) {
+							msg = new PingMessage(curLine);
+							pc.send(msg.getResponse());
+							lastReplied = System.currentTimeMillis();
+						} else if (curLine.contains("PRIVMSG " + pc.getChannelName())) {
 							msg = new CasualMessage(curLine);
 							//dont respond..yet
-						} else if (curLine.contains("PING ") && !curLine.contains("PRIVMSG")) {
-							if (System.currentTimeMillis() - lastReplied >= 500) {
-								msg = new PingMessage(curLine);
-								log.info(msg.toString());
-								pc.send(rHandler.getResponse(msg));
-								lastReplied = System.currentTimeMillis();
-							}
 						} else {
 							msg = new ServerMessage(curLine);
 						}
 
 						//logging
 						if (StringUtils.getTokenCount(curLine, ":") > 1) {
-							pc.logConsole(">>> " + msg.getAuthor() + "|" + msg.getMsg());
+							pc.logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
 						}
 					}
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+
+					log.error("Line came out as null, closing all streams.");
+					pc.getBr().close();
+					pc.getBw().close();
+					pc.getIRCSocket().close();
+					connection.join();
+				} catch (InterruptedException | IOException e) {
 					e.printStackTrace();
 				}
-			}
-
-			try {
-				pc.getBr().close();
-				pc.getBw().close();
-				pc.getIRCSocket().close();
-				pc.connection.join();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 
 		public boolean commandIsPresent(String line) {
 			Pattern req = Pattern.compile(
-					"(perc(ival,|y,|ival:|y:) ?|\\$)(help|exit|time|owner|hi)",
+					"^(perc(ival|y)(,|:))\\s?(help|exit|time|owner|hi|show that you are mine!)",
 					Pattern.CASE_INSENSITIVE);
 			return (req.matcher(line).find());
-		}
-
-		public void setShouldConnect(boolean shouldConnect) {
-			this.shouldConnect = shouldConnect;
-		}
-
-		public boolean getShouldConnect() {
-			return shouldConnect;
 		}
 	}
 
