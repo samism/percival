@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
  * Time: Unknown
  */
 public class PercivalBot extends IRCBot {
+	//todo: figure out the inner workings of IRC to get this class going
+	//todo: register percival again somehow
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
 
-
-	private final ResponseHandler rHandler = new ResponseHandler(this);
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
@@ -31,9 +31,7 @@ public class PercivalBot extends IRCBot {
 	}
 
 	class Connection implements Runnable {
-		private final PercivalBot pc;
-
-		private long lastReplied = System.currentTimeMillis();
+		private PercivalBot pc;
 
 		public Connection(PercivalBot pc) {
 			this.pc = pc;
@@ -54,11 +52,9 @@ public class PercivalBot extends IRCBot {
 						if (curLine.contains("PRIVMSG " + pc.getChannelName()) && commandIsPresent(curLine)) {
 							msg = new CommandMessage(curLine);
 							pc.sendChan(msg.getResponse());
-							lastReplied = System.currentTimeMillis();
 						} else if (curLine.contains("PING ") && !curLine.contains("PRIVMSG")) {
 							msg = new PingMessage(curLine);
 							pc.send(msg.getResponse());
-							lastReplied = System.currentTimeMillis();
 						} else if (curLine.contains("PRIVMSG " + pc.getChannelName())) {
 							msg = new CasualMessage(curLine);
 							//dont respond..yet
@@ -88,9 +84,5 @@ public class PercivalBot extends IRCBot {
 					Pattern.CASE_INSENSITIVE);
 			return (req.matcher(line).find());
 		}
-	}
-
-	public Connection getConnection() {
-		return this.c;
 	}
 }

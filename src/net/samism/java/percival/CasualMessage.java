@@ -10,6 +10,7 @@ import net.samism.java.StringUtils.StringUtils;
  */
 
 public class CasualMessage extends IRCMessage {
+	//TODO: Transfer response handling out of ResponseHandler into getResponse()
 
 	CasualMessage(String s) {
 		this.msg = s;

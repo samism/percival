@@ -15,6 +15,7 @@ import java.util.Date;
  * Time: Unknown
  */
 public class ResponseHandler {
+	//TODO: Phase this class out. The way instanceof is being used is ugly and doesn't take advantage of polymorphism.
 	private static final Logger log = LoggerFactory.getLogger(ResponseHandler.class);
 
 	private final PercivalBot pc;

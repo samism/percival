@@ -9,17 +9,8 @@ import java.io.IOException;
  * Author: Sameer Ismail
  * Date: Unknown
  * Time: Unknown
- * <p/>
+ *
  * Percival is an IRC bot, made from scratch.
- * <p/>
- * TODO:
- * <p/>
- * 1. Fix design, may be redundant
- * 2. Implement the use of CasualMessage
- * 3. Make command list dynamic
- * 4. Actually make a useful command
- * 5. Make file logging after Percival is stable
- * 6. Make IRC client after happy with Percival
  */
 public class Application {
 	public static void main(String[] args) throws IOException {
