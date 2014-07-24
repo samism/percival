@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * Time: Unknown
  */
 public class PercivalBot extends IRCBot {
-	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
+	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
 
 
 	private final ResponseHandler rHandler = new ResponseHandler(this);
@@ -58,6 +58,7 @@ public class PercivalBot extends IRCBot {
 								send("JOIN " + getChannelName());
 								send("PRIVMSG NickServ :identify 197676");
 								didPrelims = true;
+								log.info("Did initial stuff.");
 							}
 						}
 

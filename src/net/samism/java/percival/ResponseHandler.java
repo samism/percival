@@ -1,5 +1,8 @@
 package net.samism.java.percival;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +15,7 @@ import java.util.Date;
  * Time: Unknown
  */
 public class ResponseHandler {
+	private static final Logger log = LoggerFactory.getLogger(ResponseHandler.class);
 
 	private final PercivalBot pc;
 
@@ -23,7 +27,7 @@ public class ResponseHandler {
 		String line = msg.getMsg();
 		String text = !(msg instanceof PingMessage) ? line.split(getPrefix(line))[1].trim() : line;
 
-		System.out.println("line = " + line + "\ntext = " + text);
+		log.info("line = " + line + "\ntext = " + text);
 
 		StringBuilder response = new StringBuilder();
 
