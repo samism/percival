@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,45 +35,45 @@ public class PercivalBot extends IRCBot {
 		}
 
 		public void run() {
-				try {
-					send("MODE " + getBotName() + " +B"); // for bots
-					send("PRIVMSG NickServ :identify 197676");
-					send("JOIN " + getChannelName());
+			try {
+				send("MODE " + getBotName() + " +B"); // for bots
+				send("PRIVMSG NickServ :identify 197676");
+				send("JOIN " + getChannelName());
 
-					String rawLine;
+				String rawLine;
 
-					while ((rawLine = pc.getBr().readLine()) != null) {
-						Thread.sleep(250); //limit response time to 4 times a second
-						IRCMessage msg;
+				while ((rawLine = pc.getBr().readLine()) != null) {
+					Thread.sleep(250); //limit response time to 4 times a second
+					IRCMessage msg;
 
-						if (rawLine.contains("PRIVMSG " + pc.getChannelName()) &&
-								Commands.containsCommand(rawLine)) {
-							msg = new CommandMessage(rawLine);
-							pc.sendChan(msg.getResponse());
-						} else if (rawLine.contains("PING ") && !rawLine.contains("PRIVMSG")) {
-							msg = new PingMessage(rawLine);
-							pc.send(msg.getResponse());
-						} else if (rawLine.contains("PRIVMSG " + pc.getChannelName())) {
-							msg = new CasualMessage(rawLine);
-							//dont respond..yet
-						} else {
-							msg = new ServerMessage(rawLine);
-						}
-
-						//logging
-						if (StringUtils.getTokenCount(rawLine, ":") > 1) {
-							 logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
-						}
+					if (rawLine.contains("PRIVMSG " + pc.getChannelName()) &&
+							Commands.containsCommand(rawLine)) {
+						msg = new CommandMessage(rawLine);
+						pc.sendChan(msg.getResponse());
+					} else if (rawLine.contains("PING ") && !rawLine.contains("PRIVMSG")) {
+						msg = new PingMessage(rawLine);
+						pc.send(msg.getResponse());
+					} else if (rawLine.contains("PRIVMSG " + pc.getChannelName())) {
+						msg = new CasualMessage(rawLine);
+						//dont respond..yet
+					} else {
+						msg = new ServerMessage(rawLine);
 					}
 
-					log.error("Line came out as null, closing all streams.");
-					pc.getBr().close();
-					pc.getBw().close();
-					pc.getIRCSocket().close();
-					connection.join();
-				} catch (InterruptedException | IOException e) {
-					e.printStackTrace();
+					//logging
+					if (StringUtils.getTokenCount(rawLine, ":") > 1) {
+						logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
+					}
 				}
+
+				log.error("Line came out as null, closing all streams.");
+				pc.getBr().close();
+				pc.getBw().close();
+				pc.getIRCSocket().close();
+				connection.join();
+			} catch (InterruptedException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

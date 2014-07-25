@@ -3,8 +3,7 @@ package net.samism.java.percival;
 public abstract class IRCMessage {
 //	 TODO: Do all of these members have to be abstract and therefore overriden by every child class?
 
-
-	public static final String OWNER = PercivalBot.OWNER;
+	public Commands cmd = new Commands("responses.json");
 
 	String msg = null;
 

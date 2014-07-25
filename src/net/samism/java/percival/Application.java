@@ -1,7 +1,5 @@
 package net.samism.java.percival;
 
-import net.samism.java.percival.PercivalBot;
-
 import java.io.IOException;
 
 /**
@@ -9,7 +7,7 @@ import java.io.IOException;
  * Author: Sameer Ismail
  * Date: Unknown
  * Time: Unknown
- *
+ * <p/>
  * Percival is an IRC bot, made from scratch.
  */
 public class Application {

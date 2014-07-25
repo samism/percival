@@ -23,22 +23,22 @@ import java.util.regex.Pattern;
  */
 public class Commands {
 	private JSONObject responses;
-	private Set<String> commands;
+	private static Set<String> commands;
 
-	public Commands() {
-		responses = loadCommands();
+	public Commands(String file) {
+		responses = loadCommands(file);
 		commands = responses.keySet();
 	}
 
-	public boolean containsCommand(String line) {
+	public static boolean containsCommand(String line) {
 		String regex = "^(perc(ival|y)(,|:))\\s?(" + commandsToRegexString(commands) + ")";
 		Pattern req = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
 		return (req.matcher(line).find());
 	}
 
-	private JSONObject loadCommands() {
-		String jsonString = loadFile("responses.json");
+	private JSONObject loadCommands(String file) {
+		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
 		return new JSONObject(tokener);
@@ -62,7 +62,7 @@ public class Commands {
 	}
 
 	//convert a Set of strings to a single regex String
-	private String commandsToRegexString(Set<String> s) {
+	private static String commandsToRegexString(Set<String> s) {
 		String[] array = s.toArray(new String[s.size()]);
 		StringBuilder sb = new StringBuilder();
 
@@ -74,5 +74,13 @@ public class Commands {
 		}
 
 		return sb.toString();
+	}
+
+	public String getResponse(String command) {
+		return (String) responses.get(command);
+	}
+
+	public Set<String> getCommands() {
+		return commands;
 	}
 }

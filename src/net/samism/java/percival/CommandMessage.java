@@ -17,7 +17,7 @@ public class CommandMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		return null;
+		return cmd.getResponse(msg);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class CommandMessage extends IRCMessage {
 
 	@Override
 	public boolean isFromOwner() {
-		return isFrom(OWNER);
+		return isFrom(PercivalBot.OWNER);
 	}
 
 	@Override
