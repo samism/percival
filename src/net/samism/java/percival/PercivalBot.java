@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
  * Time: Unknown
  */
 public class PercivalBot extends IRCBot {
-	//todo: figure out the inner workings of IRC to get this class going
-	//todo: register percival again somehow
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
 
 	private final Connection c = new PercivalBot.Connection(this);
@@ -43,28 +41,29 @@ public class PercivalBot extends IRCBot {
 					send("PRIVMSG NickServ :identify 197676");
 					send("JOIN " + getChannelName());
 
-					String curLine;
+					String rawLine;
 
-					while ((curLine = pc.getBr().readLine()) != null) {
+					while ((rawLine = pc.getBr().readLine()) != null) {
 						Thread.sleep(250); //limit response time to 4 times a second
 						IRCMessage msg;
 
-						if (curLine.contains("PRIVMSG " + pc.getChannelName()) && commandIsPresent(curLine)) {
-							msg = new CommandMessage(curLine);
+						if (rawLine.contains("PRIVMSG " + pc.getChannelName()) &&
+								Commands.containsCommand(rawLine)) {
+							msg = new CommandMessage(rawLine);
 							pc.sendChan(msg.getResponse());
-						} else if (curLine.contains("PING ") && !curLine.contains("PRIVMSG")) {
-							msg = new PingMessage(curLine);
+						} else if (rawLine.contains("PING ") && !rawLine.contains("PRIVMSG")) {
+							msg = new PingMessage(rawLine);
 							pc.send(msg.getResponse());
-						} else if (curLine.contains("PRIVMSG " + pc.getChannelName())) {
-							msg = new CasualMessage(curLine);
+						} else if (rawLine.contains("PRIVMSG " + pc.getChannelName())) {
+							msg = new CasualMessage(rawLine);
 							//dont respond..yet
 						} else {
-							msg = new ServerMessage(curLine);
+							msg = new ServerMessage(rawLine);
 						}
 
 						//logging
-						if (StringUtils.getTokenCount(curLine, ":") > 1) {
-							pc.logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
+						if (StringUtils.getTokenCount(rawLine, ":") > 1) {
+							 logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
 						}
 					}
 
@@ -78,11 +77,5 @@ public class PercivalBot extends IRCBot {
 				}
 		}
 
-		public boolean commandIsPresent(String line) {
-			Pattern req = Pattern.compile(
-					"^(perc(ival|y)(,|:))\\s?(help|exit|time|owner|hi|show that you are mine!)",
-					Pattern.CASE_INSENSITIVE);
-			return (req.matcher(line).find());
-		}
 	}
 }

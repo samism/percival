@@ -46,6 +46,7 @@ public class IRCBot implements IRCFunctions {
 		connect(serverName, port);
 	}
 
+	@Override
 	public void connect(String server, int port) {
 		try {
 			irc = new Socket(server, port);
@@ -63,37 +64,45 @@ public class IRCBot implements IRCFunctions {
 		}
 	}
 
+	@Override
 	public void send(String msg) throws IOException {
 		bw.write(msg + NL);
 		bw.flush();
 	}
 
+	@Override
 	public void sendChan(String msg) throws IOException {
 		bw.write("PRIVMSG " + channelName + " :" + msg + NL);
 		bw.flush();
 	}
 
+	@Override
 	public void sendChan(String msg, String channel) throws IOException {
 		bw.write("PRIVMSG " + channel + " :" + msg + NL);
 		bw.flush();
 	}
 
+	@Override
 	public void join(String chan) throws IOException {
 		sendChan("/join " + chan);
 	}
 
+	@Override
 	public void leaveChannel() throws IOException {
 		sendChan("/part " + channelName);
 	}
 
+	@Override
 	public void leaveChannel(String partMsg) throws IOException {
 		sendChan("/part " + channelName + " " + partMsg);
 	}
 
+	@Override
 	public void leaveAllChannels() throws IOException {
 		sendChan("/join 0"); // "/join 0" same effect as /partall
 	}
 
+	@Override
 	public void log(String line) {
 		// logs to console, file, and later gui, by default
 		// need to get file logging system working...
@@ -134,7 +143,13 @@ public class IRCBot implements IRCFunctions {
 		}
 	}
 
-	public boolean isFileEmpty() {
+	@Override
+	public void logConsole(String line) {
+		String date = getDate("H:mm:ss:SSS");
+		log.info("[" + date + "]" + line);
+	}
+
+	private boolean isFileEmpty() {
 		boolean isEmpty = false;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(LOG_FILE.getPath()));
@@ -156,7 +171,7 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	public String getChannelName() {
-		return channelName;
+		return this.channelName;
 	}
 
 	public void setServerName(String serverName) {
@@ -164,7 +179,7 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	public String getServerName() {
-		return serverName;
+		return this.serverName;
 	}
 
 	public void setBotName(String botName) {
@@ -172,11 +187,11 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	public String getBotName() {
-		return botName;
+		return this.botName;
 	}
 
 	public int getPort() {
-		return port;
+		return this.port;
 	}
 
 	public void setPort(int port) {
@@ -184,10 +199,14 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	public BufferedReader getBr() {
-		return br;
+		return this.br;
 	}
 
 	public BufferedWriter getBw() {
-		return bw;
+		return this.bw;
+	}
+
+	public Socket getIRCSocket() {
+		return this.irc;
 	}
 }

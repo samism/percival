@@ -8,17 +8,17 @@ public abstract class IRCMessage {
 
 	String msg = null;
 
+	public abstract String getResponse();
+
 	public abstract boolean isFrom(String author);
 
 	public abstract boolean isFromOwner();
-
-	public abstract String getResponse();
 
 	public abstract String getAuthor();
 
 	public abstract String getMsg();
 
-	public String getRawMsg(){
+	public String getRawMsg() {
 		return msg;
 	}
 
