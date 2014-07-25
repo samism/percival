@@ -25,10 +25,4 @@ public interface IRCFunctions {
 	void leaveChannel(String partMsg) throws IOException;
 
 	void leaveChannel() throws IOException;
-
-	void log(String line);
-
-	void logConsole(String line);
-
-	void logToClient(String line);
 }

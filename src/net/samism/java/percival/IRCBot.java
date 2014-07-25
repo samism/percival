@@ -1,15 +1,6 @@
 package net.samism.java.percival;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -135,46 +126,24 @@ public class IRCBot implements IRCFunctions {
 				}
 			}
 
-			if (fileHasContents()) {
-				fw
-						.write("\n\n---------------------------------\n\t\t\t\t<------  "
-								+ getDate("EEE, MMM d, ''yy")
-								+ " at "
-								+ getDate("h:mm a") + "  ------>\n");
-				fw.write("[" + getDate("H:mm:ss:SSS") + "]: " + line);
+			if (!isFileEmpty()) {
 			} else {
-				fw.write("[" + getDate("H:mm:ss:SSS") + "]: " + line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void logConsole(String line) {
-		String date = getDate("H:mm:ss:SSS");
-		log.info("[" + date + "]" + line);
-	}
-
-	public void logToClient(String line) {
-	}
-
-	public boolean fileHasContents() {
-		String fileContents = "";
-
+	public boolean isFileEmpty() {
+		boolean isEmpty = false;
 		try {
-			String ln;
-			BufferedReader fileBr = new BufferedReader(new InputStreamReader(
-					new DataInputStream(new FileInputStream(LOG_FILE))));
-
-			while ((ln = fileBr.readLine()) != null)
-				fileContents += ln;
-
-			fileBr.close();
+			BufferedReader br = new BufferedReader(new FileReader(LOG_FILE.getPath()));
+			isEmpty = br.readLine() == null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return (fileContents.length() > 0 && !fileContents.isEmpty());
+		return isEmpty;
 	}
 
 	private static String getDate(String format) {
@@ -214,27 +183,11 @@ public class IRCBot implements IRCFunctions {
 		this.port = port;
 	}
 
-	public void setBr(BufferedReader br) {
-		this.br = br;
-	}
-
 	public BufferedReader getBr() {
 		return br;
 	}
 
-	public void setBw(BufferedWriter bw) {
-		this.bw = bw;
-	}
-
 	public BufferedWriter getBw() {
 		return bw;
-	}
-
-	public Socket getIRCSocket() {
-		return irc;
-	}
-
-	public void setIRCSocket(Socket IRCSocket) {
-		this.irc = IRCSocket;
 	}
 }
