@@ -1,0 +1,11 @@
+{
+    "commands": {
+        "help": "Hi, I'm Percival. You can call me Percy if you like. I was written in Java by ffs82defxp.",
+        "exit": "Exit requested by: ",
+        "time": "It's ",
+        "owner": "ffs82defxp",
+        "hi": "Hey there ",
+        "show that you are mine!": "I am ffs82defxp's slave for all of eternity!"
+
+    }
+}
