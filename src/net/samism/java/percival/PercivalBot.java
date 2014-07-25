@@ -14,6 +14,7 @@ import java.io.IOException;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
+	public static Commands cmd = new Commands();
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
@@ -36,45 +37,36 @@ public class PercivalBot extends IRCBot {
 
 		public void run() {
 			try {
-				send("MODE " + getBotName() + " +B"); // for bots
-				send("PRIVMSG NickServ :identify 197676");
-				send("JOIN " + getChannelName());
-
 				String rawLine;
 
 				while ((rawLine = pc.getBr().readLine()) != null) {
-					Thread.sleep(250); //limit response time to 4 times a second
-					IRCMessage msg;
+					IRCMessage msg; //The message is raw by default.
 
-					if (rawLine.contains("PRIVMSG " + pc.getChannelName()) &&
-							Commands.containsCommand(rawLine)) {
+					if (rawLine.contains("PRIVMSG " + getChannelName())
+							|| Commands.containsCommand(rawLine)) {
 						msg = new CommandMessage(rawLine);
 						pc.sendChan(msg.getResponse());
-					} else if (rawLine.contains("PING ") && !rawLine.contains("PRIVMSG")) {
+					} else if (rawLine.startsWith("PING ")) {
 						msg = new PingMessage(rawLine);
 						pc.send(msg.getResponse());
-					} else if (rawLine.contains("PRIVMSG " + pc.getChannelName())) {
-						msg = new CasualMessage(rawLine);
-						//dont respond..yet
 					} else {
-						msg = new ServerMessage(rawLine);
+						msg = new ServerMessage(rawLine, pc);
+						if(msg.getResponse() != null)
+							pc.send(msg.getResponse());
 					}
 
-					//logging
-					if (StringUtils.getTokenCount(rawLine, ":") > 1) {
-						logConsole(">>> " + msg.getAuthor() + " | " + msg.getMsg());
-					}
+					logConsole(">>>" + rawLine);
 				}
 
-				log.error("Line came out as null, closing all streams.");
+				log.error("Line came out as null, closing all streams and exiting.");
 				pc.getBr().close();
 				pc.getBw().close();
 				pc.getIRCSocket().close();
 				connection.join();
+				System.exit(1);
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
 }

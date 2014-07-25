@@ -66,18 +66,21 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void send(String msg) throws IOException {
+		logConsole("<<<" + msg);
 		bw.write(msg + NL);
 		bw.flush();
 	}
 
 	@Override
 	public void sendChan(String msg) throws IOException {
+		logConsole("<<<" + msg);
 		bw.write("PRIVMSG " + channelName + " :" + msg + NL);
 		bw.flush();
 	}
 
 	@Override
 	public void sendChan(String msg, String channel) throws IOException {
+		logConsole("<<<" + msg);
 		bw.write("PRIVMSG " + channel + " :" + msg + NL);
 		bw.flush();
 	}

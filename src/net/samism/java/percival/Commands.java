@@ -2,6 +2,8 @@ package net.samism.java.percival;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -22,29 +25,33 @@ import java.util.regex.Pattern;
  * It loads (later will be able to append) commands from a JSON file - responses.json.
  */
 public class Commands {
-	private JSONObject responses;
-	private static Set<String> commands;
+	private static final Logger log = LoggerFactory.getLogger(Commands.class);
 
-	public Commands(String file) {
-		responses = loadCommands(file);
-		commands = responses.keySet();
+	private static JSONObject responses = loadCommands("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
+			"/src/net/samism/java/percival/responses.json");
+	private static Set<String> commands = responses.keySet();
+
+	public Commands() {
 	}
 
 	public static boolean containsCommand(String line) {
 		String regex = "^(perc(ival|y)(,|:))\\s?(" + commandsToRegexString(commands) + ")";
-		Pattern req = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+		//System.out.println(regex);
+		Pattern req = Pattern.compile(regex);
+		Matcher m = req.matcher(line.substring(line.lastIndexOf(':')+1));
 
+		//System.out.println(m.find());
 		return (req.matcher(line).find());
 	}
 
-	private JSONObject loadCommands(String file) {
+	private static JSONObject loadCommands(String file) {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
-		return new JSONObject(tokener);
+		return (JSONObject) new JSONObject(tokener).get("commands");
 	}
 
-	private String loadFile(String path) {
+	private static String loadFile(String path) {
 		StringBuilder sb = new StringBuilder();
 		List<String> lines = null;
 
@@ -55,7 +62,8 @@ public class Commands {
 		}
 
 		if (lines != null) {
-			lines.forEach(sb::append); //cool code right here
+			for(String s : lines)
+				sb.append(s);
 		}
 
 		return sb.toString();
@@ -76,11 +84,7 @@ public class Commands {
 		return sb.toString();
 	}
 
-	public String getResponse(String command) {
+	public String getStaticResponse(String command) {
 		return (String) responses.get(command);
-	}
-
-	public Set<String> getCommands() {
-		return commands;
 	}
 }

@@ -10,30 +10,34 @@ import net.samism.java.StringUtils.StringUtils;
  */
 
 public class CommandMessage extends IRCMessage {
-
-	CommandMessage(String s) {
-		this.msg = s;
+	public CommandMessage(String s) {
+		super(s);
+		this.msg = s.substring(s.indexOf(":", s.indexOf("PRIVMSG #") + 9));
 	}
 
 	@Override
 	public String getResponse() {
-		return cmd.getResponse(msg);
+		String command = msg.substring(StringUtils.nthIndexOf(msg, ":", 2) + 1);
+
+		if (command.contains(":")) {
+			command = msg.split(":")[1];
+		} else if (command.contains(",")) {
+			command = msg.split(",")[1];
+		}
+
+		command = command.trim();
+
+		return cmd.getStaticResponse(command);
 	}
 
 	@Override
 	public boolean isFrom(String author) {
-		return msg.substring(1, StringUtils.nthIndexOf(msg, "!", 1))
-				.equals(author);
+		return msg.substring(1, msg.indexOf("!")).equals(author);
 	}
 
 	@Override
 	public boolean isFromOwner() {
 		return isFrom(PercivalBot.OWNER);
-	}
-
-	@Override
-	public String getAuthor() {
-		return msg.substring(1, msg.indexOf("!"));
 	}
 
 	@Override

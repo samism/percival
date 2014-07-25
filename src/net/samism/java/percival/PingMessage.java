@@ -11,34 +11,25 @@ public class PingMessage extends IRCMessage {
 
 	public PingMessage(String s) {
 		this.msg = s;
+		this.author = "Server";
 	}
 
 	@Override
 	public String getResponse() {
-		return null;
-	}
+		String response = "PONG ";
 
-	@Override
-	public boolean isFrom(String author) {
-		System.out.println("called isFrom() on PingMessage");
-		return false;
-	}
+		if (msg.contains(":")) {
+			response += msg.split(" ")[1];
+		} else {
+			response += msg.split(":")[1];
+		}
 
-	@Override
-	public boolean isFromOwner() {
-		System.out.println("called isFromOwner() on PingMessage");
-		return false;
-	}
-
-	@Override
-	public String getAuthor() {
-		System.out.println("called getAuthor() on PingMessage");
-		return "";
+		return response;
 	}
 
 	@Override
 	public String getMsg() {
-		return msg;
+		return getRawMsg();
 	}
 
 	@Override
