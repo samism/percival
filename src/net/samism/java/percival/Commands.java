@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
  */
 public class Commands {
 	private static final Logger log = LoggerFactory.getLogger(Commands.class);
-
 	private static JSONObject responses = loadCommands("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
 			"/src/net/samism/java/percival/responses.json");
 	private static Set<String> commands = responses.keySet();
@@ -36,11 +35,9 @@ public class Commands {
 
 	public static boolean containsCommand(String line) {
 		String regex = "^(perc(ival|y)(,|:))\\s?(" + commandsToRegexString(commands) + ")";
-		//System.out.println(regex);
 		Pattern req = Pattern.compile(regex);
-		Matcher m = req.matcher(line.substring(line.lastIndexOf(':')+1));
+		Matcher m = req.matcher(line.substring(line.lastIndexOf(':') + 1));
 
-		//System.out.println(m.find());
 		return (req.matcher(line).find());
 	}
 
@@ -62,14 +59,14 @@ public class Commands {
 		}
 
 		if (lines != null) {
-			for(String s : lines)
+			for (String s : lines)
 				sb.append(s);
 		}
 
 		return sb.toString();
 	}
 
-	//convert a Set of strings to a single regex String
+	//convert a Set of strings to a single regex String delimited with |
 	private static String commandsToRegexString(Set<String> s) {
 		String[] array = s.toArray(new String[s.size()]);
 		StringBuilder sb = new StringBuilder();

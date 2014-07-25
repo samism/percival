@@ -1,6 +1,5 @@
 package net.samism.java.percival;
 
-import net.samism.java.StringUtils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +50,7 @@ public class PercivalBot extends IRCBot {
 						pc.send(msg.getResponse());
 					} else {
 						msg = new ServerMessage(rawLine, pc);
-						if(msg.getResponse() != null)
+						if (msg.getResponse() != null)
 							pc.send(msg.getResponse());
 					}
 

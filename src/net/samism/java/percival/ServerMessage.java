@@ -1,7 +1,5 @@
 package net.samism.java.percival;
 
-import net.samism.java.StringUtils.StringUtils;
-
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
@@ -25,11 +23,11 @@ public class ServerMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		if(msg.contains("End of /MOTD command.")){
+		if (msg.contains("End of /MOTD command.")) {
 			return "MODE " + pc.getBotName() + " +B"; // for bots
-		} else if(msg.contains("This nickname is registered.")){
+		} else if (msg.contains("This nickname is registered.")) {
 			return "PRIVMSG NickServ :identify 197676";
-		} else if(msg.contains(":You are now identified")){
+		} else if (msg.contains(":You are now identified")) {
 			return "JOIN " + pc.getChannelName();
 		}
 
