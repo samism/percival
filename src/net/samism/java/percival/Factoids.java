@@ -5,7 +5,10 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +28,8 @@ import java.util.regex.Pattern;
  */
 public class Factoids {
 	private final Logger log = LoggerFactory.getLogger(Factoids.class);
+	private static final String PATH_TO_JSON = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
+			"/src/net/samism/java/percival/factoids.json";
 
 	private JSONObject facts;
 	private Set<String> triggers;
@@ -32,8 +37,7 @@ public class Factoids {
 
 	public Factoids(PercivalBot pc) {
 		this.pc = pc;
-		facts = loadJSON("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-				"/src/net/samism/java/percival/factoids.json");
+		facts = loadJSON(PATH_TO_JSON);
 		triggers = facts.keySet();
 	}
 
@@ -54,7 +58,7 @@ public class Factoids {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
-		return (JSONObject) new JSONObject(tokener).get("factoids");
+		return (JSONObject) new JSONObject(tokener);
 	}
 
 	private String loadFile(String path) {
@@ -88,5 +92,27 @@ public class Factoids {
 		}
 
 		return sb.toString();
+	}
+
+	public void add(String t, String r) {
+		facts.put(t, r); //add pair to JSON object
+
+		try {
+			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8"))
+					.close(); //modify the file
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void remove(String t){
+		facts.remove(t);
+
+		try {
+			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8"))
+					.close(); //modify the file
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

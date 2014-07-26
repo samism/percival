@@ -49,7 +49,7 @@ public class PercivalBot extends IRCBot {
 						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else if(rawLine.contains("PRIVMSG " + getChannelName() + " :p.")){ //p.owner
-						msg = new FunctionalMessage(rawLine, pc);
+						msg = new FunctionalMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else {
 						msg = new ServerMessage(rawLine, pc);

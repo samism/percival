@@ -21,7 +21,7 @@ public abstract class IRCMessage {
 		this.rawMsg = s;
 
 		if (rawMsg.contains("PRIVMSG " + pc.getChannelName())) {
-			this.author = rawMsg.substring(1, rawMsg.indexOf("!"));
+			this.author = rawMsg.substring(1).split("!")[0];
 			this.msg = s.split("PRIVMSG " + pc.getChannelName() + " :")[1];
 		} else {
 			this.author = "Server";

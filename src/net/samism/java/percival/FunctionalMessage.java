@@ -1,5 +1,7 @@
 package net.samism.java.percival;
 
+import net.samism.java.StringUtils.StringUtils;
+
 /**
  * Created with IntelliJ IDEA.
  * User: samism
@@ -9,21 +11,24 @@ package net.samism.java.percival;
 public class FunctionalMessage extends IRCMessage {
 	private static final String trigger = "p.";
 
-	String function, recipient;
+	Factoids facts;
+	String function;
 
-	public FunctionalMessage(String s, PercivalBot pc) {
+	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.recipient = rawMsg.substring(1).split("!")[0];
 		this.function = msg.split(trigger)[1];
+		this.facts = facts;
 	}
 
 	@Override
 	public String getResponse() {
 		String response = "Sorry, what?";
 
-		switch(function){
+		switch (function) {
+			case "exit":
+				PercivalBot.exit();
 			case "hi":
-				response = "Sup, " + recipient;
+				response = "Sup, " + author;
 				break;
 			case "date":
 				response = "The date is: " + PercivalBot.getDate("MMM dd yyyy");
@@ -31,7 +36,25 @@ public class FunctionalMessage extends IRCMessage {
 			case "owner":
 				response = PercivalBot.OWNER;
 				break;
-			//no need for a default case
+			default: {
+				//handle mutli-argument functions here
+
+				//adding/remove a factoid. command form: add/remove <trigger> <response>
+				if (function.startsWith("add") ||
+						(function.startsWith("remove") && isFromOwner())) {
+					String[] args = function.split(" ");
+					String t = args[1];
+					String r = function.substring(StringUtils.nthIndexOf(function, " ", 2));
+
+					if(function.startsWith("add")) {
+						facts.add(t, r);
+						response = author + ", I learned that.";
+					} else {
+						facts.remove(t);
+						response = author + ", I unlearned that.";
+					}
+				}
+			}
 		}
 
 		return response;
