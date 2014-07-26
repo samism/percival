@@ -25,30 +25,41 @@ import java.util.regex.Pattern;
  * It loads (later will be able to append) commands from a JSON file - responses.json.
  */
 public class Commands {
-	private static final Logger log = LoggerFactory.getLogger(Commands.class);
-	private static JSONObject responses = loadCommands("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-			"/src/net/samism/java/percival/responses.json");
-	private static Set<String> commands = responses.keySet();
+	private final Logger log = LoggerFactory.getLogger(Commands.class);
 
-	public Commands() {
+	private JSONObject responses;
+	private Set<String> commands;
+	private PercivalBot pc;
+
+	public Commands(PercivalBot pc) {
+		this.pc = pc;
+		responses = loadJSON("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
+				"/src/net/samism/java/percival/responses.json");
+		commands = responses.keySet();
 	}
 
-	public static boolean containsCommand(String line) {
-		String regex = "^(perc(ival|y)(,|:))\\s?(" + commandsToRegexString(commands) + ")";
+	public boolean containsCommand(String line) {
+		String regex = "^(perc(ival|y)(,|:))\\s?(" + jsonToRegexString(commands) + ")";
+		line = line.split("PRIVMSG " + pc.getChannelName() + " :")[1];
+
 		Pattern req = Pattern.compile(regex);
-		Matcher m = req.matcher(line.substring(line.lastIndexOf(':') + 1));
+		Matcher m = req.matcher(line);
 
-		return (req.matcher(line).find());
+		return req.matcher(line).find();
 	}
 
-	private static JSONObject loadCommands(String file) {
+	public String getStaticResponse(String command) {
+		return (String) responses.get(command);
+	}
+
+	private JSONObject loadJSON(String file) {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
 		return (JSONObject) new JSONObject(tokener).get("commands");
 	}
 
-	private static String loadFile(String path) {
+	private String loadFile(String path) {
 		StringBuilder sb = new StringBuilder();
 		List<String> lines = null;
 
@@ -67,7 +78,7 @@ public class Commands {
 	}
 
 	//convert a Set of strings to a single regex String delimited with |
-	private static String commandsToRegexString(Set<String> s) {
+	private String jsonToRegexString(Set<String> s) {
 		String[] array = s.toArray(new String[s.size()]);
 		StringBuilder sb = new StringBuilder();
 
@@ -79,9 +90,5 @@ public class Commands {
 		}
 
 		return sb.toString();
-	}
-
-	public String getStaticResponse(String command) {
-		return (String) responses.get(command);
 	}
 }

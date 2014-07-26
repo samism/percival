@@ -24,6 +24,9 @@ public class Application {
 				case 1:
 					new PercivalBot("Percival", "irc.strictfp.com", "rscode", 6667);
 					break;
+				case 2:
+					new PercivalBot("Percival", "irc.awfulnet.org", "programming", 6667);
+					break;
 				default:
 					System.out.println("wierd..");
 					break;

@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
-	public static Commands cmd = new Commands();
+	public Commands cmd = new Commands(this);
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
@@ -39,11 +39,13 @@ public class PercivalBot extends IRCBot {
 				String rawLine;
 
 				while ((rawLine = pc.getBr().readLine()) != null) {
+					logConsole(">>>" + rawLine);
+
 					IRCMessage msg; //The message is raw by default.
 
 					if (rawLine.contains("PRIVMSG " + getChannelName())
-							|| Commands.containsCommand(rawLine)) {
-						msg = new CommandMessage(rawLine);
+							&& cmd.containsCommand(rawLine)) {
+						msg = new CommandMessage(rawLine, cmd);
 						pc.sendChan(msg.getResponse());
 					} else if (rawLine.startsWith("PING ")) {
 						msg = new PingMessage(rawLine);
@@ -53,8 +55,6 @@ public class PercivalBot extends IRCBot {
 						if (msg.getResponse() != null)
 							pc.send(msg.getResponse());
 					}
-
-					logConsole(">>>" + rawLine);
 				}
 
 				log.error("Line came out as null, closing all streams and exiting.");

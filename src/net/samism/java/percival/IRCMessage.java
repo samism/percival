@@ -12,11 +12,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class IRCMessage {
 	static final Logger log = LoggerFactory.getLogger(IRCMessage.class);
-	static Commands cmd = PercivalBot.cmd;
 
-	String msg = null;
-	String rawMsg = null;
-	String author;
+	String msg, rawMsg, author;
 
 	public IRCMessage(String s) {
 		this.rawMsg = s;

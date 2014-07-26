@@ -10,9 +10,12 @@ import net.samism.java.StringUtils.StringUtils;
  */
 
 public class CommandMessage extends IRCMessage {
-	public CommandMessage(String s) {
+	private Commands cmd;
+
+	public CommandMessage(String s, Commands cmd) {
 		super(s);
 		this.msg = s.substring(s.indexOf(":", s.indexOf("PRIVMSG #") + 9));
+		this.cmd = cmd;
 	}
 
 	@Override
