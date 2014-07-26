@@ -21,10 +21,10 @@ public class IRCBot implements IRCFunctions {
 	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
 
 	public static final String OWNER = "ffs82defxp";
-
 	private static final String NL = "\r\n";
-	private static final File LOG_FILE = new File(getDate("EEE, MMM d, ''yy")); // file
-	private static final File LOGS_DIR = new File("logs"); // dir
+
+	private final File LOG_FILE = new File(getDate("EEE, MMM d, ''yy")); // file
+	private final File LOGS_DIR = new File("logs"); // dir
 
 	private String botName;
 	private String serverName;
@@ -43,22 +43,16 @@ public class IRCBot implements IRCFunctions {
 		this.setChannelName("#" + channelName);
 		this.setPort(port);
 
-		connect(serverName, port);
+		connect();
 	}
 
 	@Override
-	public void connect(String server, int port) {
+	public void connect() {
 		try {
-			irc = new Socket(server, port);
-			bw = new BufferedWriter(new OutputStreamWriter(irc
-					.getOutputStream()));
+			irc = new Socket(serverName, port);
+			bw = new BufferedWriter(new OutputStreamWriter(irc.getOutputStream()));
 			br = new BufferedReader(new InputStreamReader(irc.getInputStream()));
-		} catch (UnknownHostException e) {
-			log.error("No such host.");
-			e.printStackTrace();
-			System.exit(0);
 		} catch (IOException e) {
-			log.error("Error connecting to the host.");
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -164,7 +158,7 @@ public class IRCBot implements IRCFunctions {
 		return isEmpty;
 	}
 
-	private static String getDate(String format) {
+	private String getDate(String format) {
 		return new SimpleDateFormat(format).format(Calendar.getInstance()
 				.getTime());
 	}
@@ -191,10 +185,6 @@ public class IRCBot implements IRCFunctions {
 
 	public String getBotName() {
 		return this.botName;
-	}
-
-	public int getPort() {
-		return this.port;
 	}
 
 	public void setPort(int port) {

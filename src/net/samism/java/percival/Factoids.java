@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -20,26 +19,26 @@ import java.util.regex.Pattern;
  * Date: 7/25/14
  * Time: 12:39 AM
  * <p/>
- * This file handles everything having to do with commands.
+ * This file handles everything having to do with triggers.
  * <p/>
- * It loads (later will be able to append) commands from a JSON file - responses.json.
+ * It loads (later will be able to append) triggers from a JSON file - facts.json.
  */
-public class Commands {
-	private final Logger log = LoggerFactory.getLogger(Commands.class);
+public class Factoids {
+	private final Logger log = LoggerFactory.getLogger(Factoids.class);
 
-	private JSONObject responses;
-	private Set<String> commands;
+	private JSONObject facts;
+	private Set<String> triggers;
 	private PercivalBot pc;
 
-	public Commands(PercivalBot pc) {
+	public Factoids(PercivalBot pc) {
 		this.pc = pc;
-		responses = loadJSON("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-				"/src/net/samism/java/percival/responses.json");
-		commands = responses.keySet();
+		facts = loadJSON("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
+				"/src/net/samism/java/percival/facts.json");
+		triggers = facts.keySet();
 	}
 
-	public boolean containsCommand(String line) {
-		String regex = "^(perc(ival|y)(,|:))\\s?(" + jsonToRegexString(commands) + ")";
+	public boolean containsTrigger(String line) {
+		String regex = "^(perc(ival|y)(,|:))\\s?(" + jsonToRegexString(triggers) + ")";
 		line = line.split("PRIVMSG " + pc.getChannelName() + " :")[1];
 
 		Pattern req = Pattern.compile(regex);
@@ -47,15 +46,15 @@ public class Commands {
 		return req.matcher(line).find();
 	}
 
-	public String getStaticResponse(String command) {
-		return (String) responses.get(command);
+	public String getFactoid(String command) {
+		return (String) facts.get(command);
 	}
 
 	private JSONObject loadJSON(String file) {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
-		return (JSONObject) new JSONObject(tokener).get("commands");
+		return (JSONObject) new JSONObject(tokener).get("triggers");
 	}
 
 	private String loadFile(String path) {

@@ -9,13 +9,13 @@ import net.samism.java.StringUtils.StringUtils;
  * Time: 10:07 PM
  */
 
-public class CommandMessage extends IRCMessage {
-	private Commands cmd;
+public class FactoidMessage extends IRCMessage {
+	private Factoids facts;
 
-	public CommandMessage(String s, PercivalBot pc, Commands cmd) {
+	public FactoidMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
 		this.msg = s.substring(s.indexOf(":", s.indexOf("PRIVMSG #") + 9));
-		this.cmd = cmd;
+		this.facts = facts;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class CommandMessage extends IRCMessage {
 
 		command = command.trim();
 
-		return cmd.getStaticResponse(command);
+		return facts.getFactoid(command);
 	}
 
 	@Override
@@ -50,6 +50,6 @@ public class CommandMessage extends IRCMessage {
 
 	@Override
 	public String toString() {
-		return "CommandMessage: " + msg;
+		return "FactoidMessage: " + msg;
 	}
 }

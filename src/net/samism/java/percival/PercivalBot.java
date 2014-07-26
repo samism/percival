@@ -17,7 +17,7 @@ public class PercivalBot extends IRCBot {
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
-	public Commands cmd = new Commands(this);
+	public Factoids facts = new Factoids(this);
 
 	public PercivalBot(String botName, String serverName, String channelName, int port) throws IOException {
 		super(botName, serverName, channelName, port);
@@ -45,8 +45,8 @@ public class PercivalBot extends IRCBot {
 					IRCMessage msg; //The message is raw by default.
 
 					if (rawLine.contains("PRIVMSG " + getChannelName())
-							&& cmd.containsCommand(rawLine)) {
-						msg = new CommandMessage(rawLine, pc, cmd);
+							&& facts.containsTrigger(rawLine)) {
+						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else {
 						msg = new ServerMessage(rawLine, pc);

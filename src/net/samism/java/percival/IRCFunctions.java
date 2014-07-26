@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public interface IRCFunctions {
 
-	void connect(String server, int port);
+	void connect();
 
 	void send(String msg) throws IOException;
 
