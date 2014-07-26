@@ -14,7 +14,6 @@ public class FactoidMessage extends IRCMessage {
 
 	public FactoidMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.msg = s.substring(s.indexOf(":", s.indexOf("PRIVMSG #") + 9));
 		this.facts = facts;
 	}
 
@@ -31,21 +30,6 @@ public class FactoidMessage extends IRCMessage {
 		command = command.trim();
 
 		return facts.getFactoid(command);
-	}
-
-	@Override
-	public boolean isFrom(String author) {
-		return msg.substring(1, msg.indexOf("!")).equals(author);
-	}
-
-	@Override
-	public boolean isFromOwner() {
-		return isFrom(PercivalBot.OWNER);
-	}
-
-	@Override
-	public String getMsg() {
-		return msg.substring(StringUtils.nthIndexOf(msg, ":", 2) + 1);
 	}
 
 	@Override

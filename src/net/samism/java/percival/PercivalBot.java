@@ -48,6 +48,9 @@ public class PercivalBot extends IRCBot {
 							&& facts.containsTrigger(rawLine)) {
 						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
+					} else if(rawLine.contains("PRIVMSG " + getChannelName() + " :p.")){ //p.owner
+						msg = new FunctionalMessage(rawLine, pc);
+						pc.sendChannel(msg.getResponse());
 					} else {
 						msg = new ServerMessage(rawLine, pc);
 						if (msg.getResponse() != null)
@@ -60,7 +63,7 @@ public class PercivalBot extends IRCBot {
 				pc.getBw().close();
 				pc.getIRCSocket().close();
 				connection.join();
-				System.exit(1);
+				exit();
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}

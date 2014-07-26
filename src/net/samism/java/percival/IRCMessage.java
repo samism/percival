@@ -20,8 +20,9 @@ public abstract class IRCMessage {
 		this.pc = pc;
 		this.rawMsg = s;
 
-		if(rawMsg.contains("PRIVMSG " + pc.getChannelName())){
+		if (rawMsg.contains("PRIVMSG " + pc.getChannelName())) {
 			this.author = rawMsg.substring(1, rawMsg.indexOf("!"));
+			this.msg = s.split("PRIVMSG " + pc.getChannelName() + " :")[1];
 		} else {
 			this.author = "Server";
 			this.msg = rawMsg;
@@ -40,14 +41,16 @@ public abstract class IRCMessage {
 		return this.author;
 	}
 
-	public String getRawMsg() {
+	public String getMsg() {
 		return msg;
+	}
+
+	public String getRawMsg() {
+		return rawMsg;
 	}
 
 	//override this if response depends on a variable
 	public abstract String getResponse();
-
-	public abstract String getMsg();
 
 	public abstract String toString();
 }

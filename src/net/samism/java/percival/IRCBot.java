@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -24,7 +23,7 @@ public class IRCBot implements IRCFunctions {
 	private static final String NL = "\r\n";
 
 	private final File LOG_FILE = new File(getDate("EEE, MMM d, ''yy")); // file
-	private final File LOGS_DIR = new File("logs"); // dir
+	private final File LOGS_DIR = new File("logs"); // directory
 
 	private String botName;
 	private String serverName;
@@ -54,7 +53,7 @@ public class IRCBot implements IRCFunctions {
 			br = new BufferedReader(new InputStreamReader(irc.getInputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.exit(0);
+			exit();
 		}
 	}
 
@@ -158,9 +157,13 @@ public class IRCBot implements IRCFunctions {
 		return isEmpty;
 	}
 
-	private String getDate(String format) {
+	public static String getDate(String format) {
 		return new SimpleDateFormat(format).format(Calendar.getInstance()
 				.getTime());
+	}
+
+	static void exit(){
+		System.exit(0);
 	}
 
 	public void setChannelName(String channelName) {

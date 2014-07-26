@@ -33,7 +33,7 @@ public class Factoids {
 	public Factoids(PercivalBot pc) {
 		this.pc = pc;
 		facts = loadJSON("/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-				"/src/net/samism/java/percival/facts.json");
+				"/src/net/samism/java/percival/factoids.json");
 		triggers = facts.keySet();
 	}
 
@@ -54,7 +54,7 @@ public class Factoids {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
-		return (JSONObject) new JSONObject(tokener).get("triggers");
+		return (JSONObject) new JSONObject(tokener).get("factoids");
 	}
 
 	private String loadFile(String path) {
