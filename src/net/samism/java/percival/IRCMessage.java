@@ -12,15 +12,20 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class IRCMessage {
 	static final Logger log = LoggerFactory.getLogger(IRCMessage.class);
+	PercivalBot pc;
 
 	String msg, rawMsg, author;
 
-	public IRCMessage(String s) {
+	public IRCMessage(String s, PercivalBot pc) {
+		this.pc = pc;
 		this.rawMsg = s;
-		this.author = rawMsg.substring(1, rawMsg.indexOf("!"));
-	}
 
-	public IRCMessage() {
+		if(rawMsg.contains("PRIVMSG " + pc.getChannelName())){
+			this.author = rawMsg.substring(1, rawMsg.indexOf("!"));
+		} else {
+			this.author = "Server";
+			this.msg = rawMsg;
+		}
 	}
 
 	public boolean isFrom(String author) {

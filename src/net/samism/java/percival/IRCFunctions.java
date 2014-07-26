@@ -14,9 +14,9 @@ public interface IRCFunctions {
 
 	void send(String msg) throws IOException;
 
-	void sendChan(String msg) throws IOException;
+	void sendChannel(String msg) throws IOException;
 
-	void sendChan(String msg, String channel) throws IOException;
+	void sendChannel(String msg, String channel) throws IOException;
 
 	void join(String chan) throws IOException;
 

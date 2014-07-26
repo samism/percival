@@ -13,10 +13,11 @@ import java.io.IOException;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
-	public Commands cmd = new Commands(this);
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
+
+	public Commands cmd = new Commands(this);
 
 	public PercivalBot(String botName, String serverName, String channelName, int port) throws IOException {
 		super(botName, serverName, channelName, port);
@@ -45,11 +46,8 @@ public class PercivalBot extends IRCBot {
 
 					if (rawLine.contains("PRIVMSG " + getChannelName())
 							&& cmd.containsCommand(rawLine)) {
-						msg = new CommandMessage(rawLine, cmd);
-						pc.sendChan(msg.getResponse());
-					} else if (rawLine.startsWith("PING ")) {
-						msg = new PingMessage(rawLine);
-						pc.send(msg.getResponse());
+						msg = new CommandMessage(rawLine, pc, cmd);
+						pc.sendChannel(msg.getResponse());
 					} else {
 						msg = new ServerMessage(rawLine, pc);
 						if (msg.getResponse() != null)

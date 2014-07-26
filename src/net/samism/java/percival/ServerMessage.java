@@ -5,15 +5,15 @@ package net.samism.java.percival;
  * Author: Sameer Ismail
  * Date: 7/23/11
  * Time: 10:05 PM
+ *
+ * This class handles responses to messages from the server.
+ * That includes: PING/PONG and initial nickserv stuff
  */
 
 public class ServerMessage extends IRCMessage {
-	PercivalBot pc;
 
 	public ServerMessage(String s, PercivalBot pc) {
-		this.msg = s;
-		this.author = "Server";
-		this.pc = pc;
+		super(s, pc);
 	}
 
 	@Override
@@ -23,11 +23,17 @@ public class ServerMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		if (msg.contains("End of /MOTD command.")) {
+		if(rawMsg.startsWith("PING ")){
+			if (msg.contains(":")) {
+				return "PONG " + msg.split(" ")[1];
+			} else {
+				return "PONG " + msg.split(":")[1];
+			}
+		} else if (rawMsg.contains("End of /MOTD command.")) {
 			return "MODE " + pc.getBotName() + " +B"; // for bots
-		} else if (msg.contains("This nickname is registered.")) {
+		} else if (rawMsg.contains("This nickname is registered.")) {
 			return "PRIVMSG NickServ :identify 197676";
-		} else if (msg.contains(":You are now identified")) {
+		} else if (rawMsg.contains(":You are now identified")) {
 			return "JOIN " + pc.getChannelName();
 		}
 

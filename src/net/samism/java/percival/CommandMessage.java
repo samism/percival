@@ -12,8 +12,8 @@ import net.samism.java.StringUtils.StringUtils;
 public class CommandMessage extends IRCMessage {
 	private Commands cmd;
 
-	public CommandMessage(String s, Commands cmd) {
-		super(s);
+	public CommandMessage(String s, PercivalBot pc, Commands cmd) {
+		super(s, pc);
 		this.msg = s.substring(s.indexOf(":", s.indexOf("PRIVMSG #") + 9));
 		this.cmd = cmd;
 	}

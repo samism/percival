@@ -43,7 +43,6 @@ public class Commands {
 		line = line.split("PRIVMSG " + pc.getChannelName() + " :")[1];
 
 		Pattern req = Pattern.compile(regex);
-		Matcher m = req.matcher(line);
 
 		return req.matcher(line).find();
 	}

@@ -9,9 +9,10 @@ package net.samism.java.percival;
 
 public class PingMessage extends IRCMessage {
 
-	public PingMessage(String s) {
-		this.msg = s;
-		this.author = "Server";
+	public PingMessage(String s, PercivalBot pc) {
+//		this.msg = s;
+//		this.author = "Server";
+		super(s, pc);
 	}
 
 	@Override

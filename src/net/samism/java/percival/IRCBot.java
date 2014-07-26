@@ -72,14 +72,14 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void sendChan(String msg) throws IOException {
+	public void sendChannel(String msg) throws IOException {
 		logConsole("<<<" + msg);
 		bw.write("PRIVMSG " + channelName + " :" + msg + NL);
 		bw.flush();
 	}
 
 	@Override
-	public void sendChan(String msg, String channel) throws IOException {
+	public void sendChannel(String msg, String channel) throws IOException {
 		logConsole("<<<" + msg);
 		bw.write("PRIVMSG " + channel + " :" + msg + NL);
 		bw.flush();
@@ -87,22 +87,22 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void join(String chan) throws IOException {
-		sendChan("/join " + chan);
+		sendChannel("/join " + chan);
 	}
 
 	@Override
 	public void leaveChannel() throws IOException {
-		sendChan("/part " + channelName);
+		sendChannel("/part " + channelName);
 	}
 
 	@Override
 	public void leaveChannel(String partMsg) throws IOException {
-		sendChan("/part " + channelName + " " + partMsg);
+		sendChannel("/part " + channelName + " " + partMsg);
 	}
 
 	@Override
 	public void leaveAllChannels() throws IOException {
-		sendChan("/join 0"); // "/join 0" same effect as /partall
+		sendChannel("/join 0"); // "/join 0" same effect as /partall
 	}
 
 	@Override
