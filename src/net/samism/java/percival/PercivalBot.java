@@ -13,6 +13,7 @@ import java.io.IOException;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
+	public static final String TRIGGER = "p$";
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
@@ -44,11 +45,11 @@ public class PercivalBot extends IRCBot {
 
 					IRCMessage msg; //The message is raw by default.
 
-					if (rawLine.contains("PRIVMSG " + getChannelName())
+					if (rawLine.contains("PRIVMSG " + getChannelName()) //TODO Make factoids intermittent
 							&& facts.containsTrigger(rawLine)) {
 						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
-					} else if(rawLine.contains("PRIVMSG " + getChannelName() + " :p.")){ //p.owner
+					} else if(rawLine.contains("PRIVMSG " + getChannelName() + " :" + TRIGGER)){ //eg. p$owner
 						msg = new FunctionalMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else {

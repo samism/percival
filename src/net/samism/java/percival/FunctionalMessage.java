@@ -9,14 +9,12 @@ import net.samism.java.StringUtils.StringUtils;
  * Time: 3:53 AM
  */
 public class FunctionalMessage extends IRCMessage {
-	private static final String trigger = "p.";
-
 	Factoids facts;
 	String function;
 
 	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.function = msg.split(trigger)[1];
+		this.function = msg.split(PercivalBot.TRIGGER)[1];
 		this.facts = facts;
 	}
 
