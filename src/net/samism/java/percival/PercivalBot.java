@@ -45,8 +45,7 @@ public class PercivalBot extends IRCBot {
 
 					IRCMessage msg; //The message is raw by default.
 
-					if (rawLine.contains("PRIVMSG " + getChannelName()) //TODO Make factoids intermittent
-							&& facts.containsTrigger(rawLine)) {
+					if (rawLine.contains("PRIVMSG " + getChannelName()) && facts.containsTrigger(rawLine)) {
 						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else if (rawLine.contains("PRIVMSG " + getChannelName() + " :" + TRIGGER)) { //eg. p$owner
