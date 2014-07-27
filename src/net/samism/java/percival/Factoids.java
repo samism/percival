@@ -5,10 +5,8 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,7 +40,8 @@ public class Factoids {
 	}
 
 	public boolean containsTrigger(String line) {
-		String regex = "^(perc(ival|y)(,|:))\\s?(" + jsonToRegexString(triggers) + ")";
+		//todo: allow more than one trigger for a given factoid
+		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
 		line = line.split("PRIVMSG " + pc.getChannelName() + " :")[1];
 
 		Pattern req = Pattern.compile(regex);
@@ -58,7 +57,7 @@ public class Factoids {
 		String jsonString = loadFile(file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
-		return (JSONObject) new JSONObject(tokener);
+		return new JSONObject(tokener);
 	}
 
 	private String loadFile(String path) {
@@ -98,19 +97,17 @@ public class Factoids {
 		facts.put(t, r); //add pair to JSON object
 
 		try {
-			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8"))
-					.close(); //modify the file
+			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void remove(String t){
+	public void remove(String t) {
 		facts.remove(t);
 
 		try {
-			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8"))
-					.close(); //modify the file
+			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

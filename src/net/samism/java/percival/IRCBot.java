@@ -22,8 +22,10 @@ public class IRCBot implements IRCFunctions {
 	public static final String OWNER = "ffs82defxp";
 	private static final String NL = "\r\n";
 
-	private final File LOG_FILE = new File(getDate("EEE, MMM d, ''yy")); // file
+	private final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
 	private final File LOGS_DIR = new File("logs"); // directory
+
+	private FileWriter fw;
 
 	private String botName;
 	private String serverName;
@@ -33,8 +35,6 @@ public class IRCBot implements IRCFunctions {
 	private BufferedReader br;
 	private BufferedWriter bw;
 	private Socket irc;
-
-	private FileWriter fw;
 
 	public IRCBot(String botName, String serverName, String channelName, int port) {
 		this.setBotName(botName);
@@ -100,8 +100,8 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void log(String line) {
+		//todo: Get file logging working.
 		// logs to console, file, and later gui, by default
-		// need to get file logging system working...
 		log.info("[" + getDate("H:mm:ss:SSS") + "]: " + line);
 
 		try {
@@ -158,11 +158,11 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	public static String getDate(String format) {
-		return new SimpleDateFormat(format).format(Calendar.getInstance()
-				.getTime());
+		return new SimpleDateFormat(format).
+				format(Calendar.getInstance().getTime());
 	}
 
-	static void exit(){
+	static void exit() {
 		System.exit(0);
 	}
 

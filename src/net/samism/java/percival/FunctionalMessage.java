@@ -23,6 +23,7 @@ public class FunctionalMessage extends IRCMessage {
 		String response = "Sorry, what?";
 
 		switch (function) {
+			//todo: Make each case match a class rather than a single String
 			case "exit":
 				PercivalBot.exit();
 			case "hi":
