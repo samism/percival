@@ -57,15 +57,19 @@ public class PercivalBot extends IRCBot {
 							pc.send(msg.getResponse());
 					}
 				}
-
-				log.error("Line came out as null, closing all streams and exiting.");
-				pc.getBr().close();
-				pc.getBw().close();
-				pc.getIRCSocket().close();
-				connection.join();
-				exit();
-			} catch (InterruptedException | IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
+			} finally {
+				log.error("Line came out as null, closing all streams and exiting.");
+				try {
+					pc.getBr().close();
+					pc.getBw().close();
+					pc.getIRCSocket().close();
+					connection.join();
+				} catch (IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+				exit();
 			}
 		}
 	}
