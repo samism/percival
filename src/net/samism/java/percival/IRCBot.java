@@ -16,8 +16,8 @@ import static net.samism.java.percival.Application.exit;
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
- * Date: Unknown
- * Time: Unknown
+ * Date: 7/29/2014
+ * Time: 4:05 AM
  */
 
 public class IRCBot implements IRCFunctions {

@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Created with IntelliJ IDEA.
+ * Author: Sameer Ismail
+ * Date: 7/29/2014
+ * Time: 4:03 AM
+ *
  * Types of possible messages:
  * -command message (respond with response to command from JSON)
  * -ping message (respond with "PONG")
@@ -11,18 +16,17 @@ import org.slf4j.LoggerFactory;
  * -a message that is none of the above (casual message)?
  */
 public abstract class IRCMessage {
-	static final Logger log = LoggerFactory.getLogger(IRCMessage.class);
-	PercivalBot pc;
+	final PercivalBot pc;
 
-	String msg, rawMsg, author;
+	final String msg, rawMsg, author;
 
 	public IRCMessage(String s, PercivalBot pc) {
 		this.pc = pc;
 		this.rawMsg = s;
 
-		if (rawMsg.contains("PRIVMSG " + pc.getChannelName())) {
+		if (rawMsg.contains("PRIVMSG " + pc.getCurrentChannelName())) {
 			this.author = rawMsg.substring(1).split("!")[0];
-			this.msg = s.split("PRIVMSG " + pc.getChannelName() + " :")[1];
+			this.msg = s.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
 		} else {
 			this.author = "Server";
 			this.msg = rawMsg;

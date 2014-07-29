@@ -3,7 +3,10 @@ package net.samism.java.percival;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import static net.samism.java.percival.Application.botInstances;
 import static net.samism.java.percival.Application.exit;
@@ -11,8 +14,8 @@ import static net.samism.java.percival.Application.exit;
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
- * Date: Unknown
- * Time: Unknown
+ * Date: 7/29/2014
+ * Time: 4:03 AM
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
@@ -21,10 +24,13 @@ public class PercivalBot extends IRCBot {
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
-	public Factoids facts = new Factoids(this);
+	public final Factoids facts = new Factoids(this);
+	private final String identPass;
 
 	public PercivalBot(String botName, String serverName, String[] channels, int port) throws IOException {
 		super(botName, serverName, channels, port);
+
+		identPass = loadIdentPass(); //needed to protect the identify password
 
 		send("NICK " + getBotName());
 		send("USER " + getBotName() + " 0 * :" + getBotName());
@@ -77,5 +83,21 @@ public class PercivalBot extends IRCBot {
 					exit();
 			}
 		}
+	}
+
+	public String getIdentPass() {
+		return identPass;
+	}
+
+	private String loadIdentPass(){
+		String pass = "";
+
+		try {
+			pass = new Scanner(new File("config/percy.config")).next();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return pass;
 	}
 }

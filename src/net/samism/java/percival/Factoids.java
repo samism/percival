@@ -42,7 +42,7 @@ public class Factoids {
 	public boolean containsTrigger(String line) {
 		//todo: allow more than one trigger for a given factoid
 		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
-		line = line.split("PRIVMSG " + pc.getChannelName() + " :")[1];
+		line = line.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
 
 		Pattern req = Pattern.compile(regex);
 

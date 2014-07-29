@@ -5,11 +5,10 @@ import java.io.IOException;
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
- * Date: Unknown
- * Time: Unknown
+ * Date: 7/29/2014
+ * Time: 4:04 AM
  */
 public interface IRCFunctions {
-
 	void connect();
 
 	void send(String msg) throws IOException;

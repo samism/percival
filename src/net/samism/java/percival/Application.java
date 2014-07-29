@@ -6,8 +6,8 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
- * Date: Unknown
- * Time: Unknown
+ * Date: 7/29/2014
+ * Time: 4:05 AM
  * <p/>
  * Percival is an IRC bot, made from scratch.
  */

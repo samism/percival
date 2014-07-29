@@ -25,7 +25,7 @@ public class FunctionalMessage extends IRCMessage {
 		switch (function) {
 			//todo: Make each case match a class rather than a single String
 			case "exit":
-				PercivalBot.exit();
+				Application.exit();
 			case "hi":
 				response = "Sup, " + author;
 				break;
