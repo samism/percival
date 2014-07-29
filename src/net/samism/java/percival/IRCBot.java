@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static net.samism.java.percival.Application.exit;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,8 +24,8 @@ public class IRCBot implements IRCFunctions {
 	public static final String OWNER = "ffs82defxp";
 	private static final String NL = "\r\n";
 
-	private final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
-	private final File LOGS_DIR = new File("logs"); // directory
+	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
+	private static final File LOGS_DIR = new File("logs"); // directory
 
 	private FileWriter fw;
 
@@ -160,10 +162,6 @@ public class IRCBot implements IRCFunctions {
 	public static String getDate(String format) {
 		return new SimpleDateFormat(format).
 				format(Calendar.getInstance().getTime());
-	}
-
-	static void exit() {
-		System.exit(0);
 	}
 
 	public void setChannelName(String channelName) {

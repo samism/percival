@@ -29,8 +29,13 @@ public class Application {
 					break;
 				default:
 					System.out.println("wierd..");
+					exit();¬
 					break;
 			}
 		}
+	}
+
+	public static void exit() {
+		System.exit(0);
 	}
 }

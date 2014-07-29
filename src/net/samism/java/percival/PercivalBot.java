@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static net.samism.java.percival.Application.exit;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail

@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * It loads (later will be able to append) triggers from a JSON file - facts.json.
  */
 public class Factoids {
-	private final Logger log = LoggerFactory.getLogger(Factoids.class);
+	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
 	private static final String PATH_TO_JSON = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
 			"/src/net/samism/java/percival/factoids.json";
 
