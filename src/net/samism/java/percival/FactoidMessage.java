@@ -1,6 +1,6 @@
 package net.samism.java.percival;
 
-import net.samism.java.StringUtils.StringUtils;
+import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +19,7 @@ public class FactoidMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		String command = msg.substring(StringUtils.nthIndexOf(msg, ":", 2) + 1);
+		String command = msg.substring(nthIndexOf(msg, ":", 2) + 1);
 
 		if (command.contains(":")) {
 			command = msg.split(":")[1];

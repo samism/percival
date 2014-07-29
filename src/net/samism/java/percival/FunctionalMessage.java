@@ -1,6 +1,6 @@
 package net.samism.java.percival;
 
-import net.samism.java.StringUtils.StringUtils;
+import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,9 +43,9 @@ public class FunctionalMessage extends IRCMessage {
 						(function.startsWith("remove") && isFromOwner())) {
 					String[] args = function.split(" ");
 					String t = args[1];
-					String r = function.substring(StringUtils.nthIndexOf(function, " ", 2));
+					String r = function.substring(nthIndexOf(function, " ", 2));
 
-					if(function.startsWith("add")) {
+					if (function.startsWith("add")) {
 						facts.add(t, r);
 						response = author + ", I learned that.";
 					} else {
