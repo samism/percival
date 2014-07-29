@@ -1,6 +1,7 @@
 package net.samism.java.percival;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,28 +12,23 @@ import java.io.IOException;
  * Percival is an IRC bot, made from scratch.
  */
 public class Application {
-	public static void main(String[] args) throws IOException {
-		if (args.length == 0) {
-			new PercivalBot("Percival", "irc.foonetic.net", "test", 6667);
-		} else {
-			int arg = Integer.parseInt(args[0]);
+	static final ArrayList<PercivalBot> botInstances;
 
-			switch (arg) {
-				case 0:
-					new PercivalBot("Percival", "irc.foonetic.net", "lingubender", 6667);
-					break;
-				case 1:
-					new PercivalBot("Percival", "irc.strictfp.com", "rscode", 6667);
-					break;
-				case 2:
-					new PercivalBot("Percival", "irc.awfulnet.org", "programming", 6667);
-					break;
-				default:
-					System.out.println("wierd..");
-					exit();
-					break;
-			}
+	static {
+		botInstances = new ArrayList<>();
+
+		try {
+			botInstances.add(new PercivalBot("Percival", "irc.foonetic.net", new String[]{"test"}, 6667));
+			botInstances.add(new PercivalBot("Percival", "irc.awfulnet.org", new String[]{"programming"}, 6667));
+			botInstances.add(new PercivalBot("Percival", "irc.freenode.net", new String[]{"##java"}, 6667));
+			botInstances.add(new PercivalBot("Percival", "irc.strictfp.com", new String[]{"rscode"}, 6667));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
+
+	public static void main(int[] args) throws IOException {
+		botInstances.forEach(PercivalBot::connect); //join all servers
 	}
 
 	public static void exit() {

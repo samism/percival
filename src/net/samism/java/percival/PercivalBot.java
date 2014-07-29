@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static net.samism.java.percival.Application.botInstances;
 import static net.samism.java.percival.Application.exit;
 
 /**
@@ -22,8 +23,8 @@ public class PercivalBot extends IRCBot {
 
 	public Factoids facts = new Factoids(this);
 
-	public PercivalBot(String botName, String serverName, String channelName, int port) throws IOException {
-		super(botName, serverName, channelName, port);
+	public PercivalBot(String botName, String serverName, String[] channels, int port) throws IOException {
+		super(botName, serverName, channels, port);
 
 		send("NICK " + getBotName());
 		send("USER " + getBotName() + " 0 * :" + getBotName());
@@ -42,15 +43,15 @@ public class PercivalBot extends IRCBot {
 			try {
 				String rawLine;
 
-				while ((rawLine = pc.getBr().readLine()) != null) {
-					logConsole(">>>" + rawLine);
+				while ((rawLine = pc.getBr().readLine()) != null) { //if its null, thread dies
+					logConsole(">>>" + rawLine); //log to the console immediately
 
 					IRCMessage msg; //The message is raw by default.
 
-					if (rawLine.contains("PRIVMSG " + getChannelName()) && facts.containsTrigger(rawLine)) {
+					if (rawLine.contains("PRIVMSG " + getCurrentChannelName()) && facts.containsTrigger(rawLine)) {
 						msg = new FactoidMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
-					} else if (rawLine.contains("PRIVMSG " + getChannelName() + " :" + TRIGGER)) { //eg. p>owner
+					} else if (rawLine.contains("PRIVMSG " + getCurrentChannelName() + " :" + TRIGGER)) { //eg. p>owner
 						msg = new FunctionalMessage(rawLine, pc, facts);
 						pc.sendChannel(msg.getResponse());
 					} else {
@@ -61,17 +62,19 @@ public class PercivalBot extends IRCBot {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				log.error("Line came out as null, closing all streams and exiting.");
+			} finally { //ensure network & file I/O is closed
+				log.error("Line came out as null, closing all streams, killing this thread..");
 				try {
 					pc.getBr().close();
 					pc.getBw().close();
 					pc.getIRCSocket().close();
-					connection.join();
-				} catch (IOException | InterruptedException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				exit();
+
+				botInstances.remove(pc); //remove this object from the list
+				if (botInstances.isEmpty())
+					exit();
 			}
 		}
 	}

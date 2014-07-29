@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import static net.samism.java.percival.Application.exit;
 
@@ -36,20 +38,23 @@ public class IRCBot implements IRCFunctions {
 
 	private String botName;
 	private String serverName;
-	private String channelName;
 	private int port;
+	private ArrayList<String> channels;
+
+	private String currentChannel;
 
 	private BufferedReader br;
 	private BufferedWriter bw;
 	private Socket irc;
 
-	public IRCBot(String botName, String serverName, String channelName, int port) {
+
+	public IRCBot(String botName, String serverName, String[] channels, int port) {
 		this.setBotName(botName);
 		this.setServerName(serverName);
-		this.setChannelName("#" + channelName);
 		this.setPort(port);
 
-		connect();
+		Collections.addAll(this.channels, channels);
+		this.currentChannel = this.channels.get(0); //for now. todo: how to determine which channel is the "current"?
 	}
 
 	@Override
@@ -74,7 +79,7 @@ public class IRCBot implements IRCFunctions {
 	@Override
 	public void sendChannel(String msg) throws IOException {
 		logConsole("<<<" + msg);
-		bw.write("PRIVMSG " + channelName + " :" + msg + NL);
+		bw.write("PRIVMSG " + currentChannel + " :" + msg + NL);
 		bw.flush();
 	}
 
@@ -92,12 +97,12 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void leaveChannel() throws IOException {
-		sendChannel("/part " + channelName);
+		sendChannel("/part " + currentChannel);
 	}
 
 	@Override
 	public void leaveChannel(String partMsg) throws IOException {
-		sendChannel("/part " + channelName + " " + partMsg);
+		sendChannel("/part " + currentChannel + " " + partMsg);
 	}
 
 	@Override
@@ -142,12 +147,12 @@ public class IRCBot implements IRCFunctions {
 				format(Calendar.getInstance().getTime());
 	}
 
-	public void setChannelName(String channelName) {
-		this.channelName = channelName;
+	public void setCurrentChannelName(String channelName) {
+		this.currentChannel = channelName;
 	}
 
-	public String getChannelName() {
-		return this.channelName;
+	public String getCurrentChannelName() {
+		return this.currentChannel;
 	}
 
 	public void setServerName(String serverName) {
