@@ -25,9 +25,14 @@ public class IRCBot implements IRCFunctions {
 	private static final String NL = "\r\n";
 
 	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
-	private static final File LOGS_DIR = new File("logs"); // directory
+	private static final File LOGS_DIR = new File("percy-logs"); // logs directory
 
-	private FileWriter fw;
+	private static final FileWriter fw;
+
+	static {
+		//todo: figure out FileWriter stuff
+		fw = null;
+	}
 
 	private String botName;
 	private String serverName;
@@ -101,50 +106,23 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void log(String line) {
-		//todo: Get file logging working.
-		// logs to console, file, and later gui, by default
-		log.info("[" + getDate("H:mm:ss:SSS") + "]: " + line);
-
-		try {
-			if (LOGS_DIR.exists()) {
-				if (LOG_FILE.exists()) {
-					fw = new FileWriter(LOG_FILE);
-				} else {
-					if (LOG_FILE.createNewFile()) {
-						fw = new FileWriter(LOG_FILE);
-					} else {
-						log.info("couldn't make log file");
-					}
-				}
-			} else {
-				if (LOGS_DIR.mkdir()) {
-					if (LOG_FILE.exists()) {
-						fw = new FileWriter(LOG_FILE);
-					} else {
-						if (LOG_FILE.createNewFile()) {
-							fw = new FileWriter(LOG_FILE);
-						} else {
-							log.info("couldn't make log file");
-						}
-					}
-				} else {
-					log.info("couldn't make logs directory");
-				}
-			}
-
-			if (!isFileEmpty()) {
-			} else {
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void logConsole(String line) {
 		String date = getDate("H:mm:ss:SSS");
 		log.info("[" + date + "]" + line);
+	}
+
+	@Override
+	public void log(String line) {
+		//todo: Get file logging working.
+		logConsole(line);
+
+		//todo: write to a file
+
+		if (!isFileEmpty()) {
+			//do stuff provided file has been appended to already
+		} else {
+		}
+
 	}
 
 	private boolean isFileEmpty() {
