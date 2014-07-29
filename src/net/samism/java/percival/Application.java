@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * <p/>
  * Percival is an IRC bot, made from scratch.
  */
-public class Application {
+public final class Application {
 	static final ArrayList<PercivalBot> botInstances;
 
 	static {
@@ -31,7 +31,7 @@ public class Application {
 		botInstances.forEach(PercivalBot::connect); //join all servers
 	}
 
-	public static void exit() {
+	public final static void exit() {
 		System.exit(0);
 	}
 }

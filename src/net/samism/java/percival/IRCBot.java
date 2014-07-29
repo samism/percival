@@ -48,6 +48,7 @@ public class IRCBot implements IRCFunctions {
 	private Socket irc;
 
 
+	//todo: encapsulate all these arguments into an Object, perhaps omit botName
 	public IRCBot(String botName, String serverName, String[] channels, int port) {
 		this.setBotName(botName);
 		this.setServerName(serverName);
@@ -117,7 +118,7 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void log(String line) {
+	public final void log(String line) {
 		//todo: Get file logging working.
 		logConsole(line);
 
@@ -142,7 +143,7 @@ public class IRCBot implements IRCFunctions {
 		return isEmpty;
 	}
 
-	public static String getDate(String format) {
+	public final static String getDate(String format) {
 		return new SimpleDateFormat(format).
 				format(Calendar.getInstance().getTime());
 	}
