@@ -24,22 +24,22 @@ import java.util.regex.Pattern;
  * <p/>
  * It loads (later will be able to append) triggers from a JSON file - facts.json.
  */
-public class Factoids {
+public final class Factoids {
 	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
 	private static final String PATH_TO_JSON = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
 			"/src/net/samism/java/percival/factoids.json";
 
-	private JSONObject facts;
-	private Set<String> triggers;
-	private PercivalBot pc;
+	private final JSONObject facts;
+	private final Set<String> triggers;
+	private final PercivalBot pc;
 
 	public Factoids(PercivalBot pc) {
 		this.pc = pc;
-		facts = loadJSON(PATH_TO_JSON);
-		triggers = facts.keySet();
+		this.facts = loadJSON(PATH_TO_JSON);
+		this.triggers = facts.keySet();
 	}
 
-	public boolean containsTrigger(String line) {
+	public final boolean containsTrigger(String line) {
 		//todo: allow more than one trigger for a given factoid
 		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
 		line = line.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
@@ -49,7 +49,7 @@ public class Factoids {
 		return req.matcher(line).find();
 	}
 
-	public String getFactoid(String command) {
+	public final String getFactoid(String command) {
 		return (String) facts.get(command);
 	}
 
@@ -93,7 +93,7 @@ public class Factoids {
 		return sb.toString();
 	}
 
-	public void add(String t, String r) {
+	public final void add(String t, String r) {
 		facts.put(t, r); //add pair to JSON object
 
 		try {
@@ -103,7 +103,7 @@ public class Factoids {
 		}
 	}
 
-	public void remove(String t) {
+	public final void remove(String t) {
 		facts.remove(t);
 
 		try {

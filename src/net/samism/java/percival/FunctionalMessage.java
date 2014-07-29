@@ -9,8 +9,8 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  * Time: 3:53 AM
  */
 public class FunctionalMessage extends IRCMessage {
-	Factoids facts;
-	String function;
+	final Factoids facts;
+	final String function;
 
 	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
