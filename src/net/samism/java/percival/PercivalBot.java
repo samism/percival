@@ -89,7 +89,7 @@ public class PercivalBot extends IRCBot {
 		return identPass;
 	}
 
-	private String loadIdentPass(){
+	private String loadIdentPass() {
 		String pass = "";
 
 		try {
