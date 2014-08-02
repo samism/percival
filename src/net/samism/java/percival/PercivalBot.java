@@ -91,9 +91,11 @@ public class PercivalBot extends IRCBot {
 
 	private String loadIdentPass() {
 		String pass = "";
+		log.info(new File(".").getAbsoluteFile().toString());
 
 		try {
-			pass = new Scanner(new File("config/percy.config")).next();
+			pass = new Scanner(
+					new File("out/production/IRC Bot (Percival)/net/samism/java/percival/config/percy.config")).next();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

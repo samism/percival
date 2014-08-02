@@ -12,9 +12,9 @@ import java.util.ArrayList;
  * Percival is an IRC bot, made from scratch.
  */
 public final class Application {
-	static final ArrayList<PercivalBot> botInstances;
+	static ArrayList<PercivalBot> botInstances;
 
-	static {
+	public static void main(int[] args) {
 		botInstances = new ArrayList<>();
 
 		try {
@@ -25,13 +25,11 @@ public final class Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		botInstances.forEach(PercivalBot::connect); //join all servers; todo: join all channels
 	}
 
-	public static void main(int[] args) throws IOException {
-		botInstances.forEach(PercivalBot::connect); //join all servers
-	}
-
-	public final static void exit() {
+	public static void exit() {
 		System.exit(0);
 	}
 }

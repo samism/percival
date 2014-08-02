@@ -29,12 +29,12 @@ public class IRCBot implements IRCFunctions {
 	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
 	private static final File LOGS_DIR = new File("percy-logs"); // logs directory
 
-	private static final FileWriter fw;
+	private static final FileWriter fw = null;
 
-	static {
-		//todo: figure out FileWriter stuff
-		fw = null;
-	}
+//	static {
+//		//todo: figure out FileWriter stuff
+//		fw = null;
+//	}
 
 	private String botName;
 	private String serverName;
@@ -53,6 +53,7 @@ public class IRCBot implements IRCFunctions {
 		this.setBotName(botName);
 		this.setServerName(serverName);
 		this.setPort(port);
+		this.channels = new ArrayList<>();
 
 		Collections.addAll(this.channels, channels);
 		this.currentChannel = this.channels.get(0); //for now. todo: how to determine which channel is the "current"?
