@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 
 import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
+
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
@@ -37,7 +38,6 @@ public class PercivalBot extends IRCBot {
 		send("USER " + getBotName() + " 0 * :" + getBotName());
 
 		connection.start();
-		log.info("starting thread");
 	}
 
 	class Connection implements Runnable {
@@ -48,14 +48,13 @@ public class PercivalBot extends IRCBot {
 		}
 
 		public void run() {
-			log.info("thread started");
 			try {
 				String rawLine;
 
 				while ((rawLine = pc.getBr().readLine()) != null) { //if its null, thread dies
 					logConsole(">>>" + rawLine); //log to the console immediately
 
-					IRCMessage msg; //The message is raw by default.
+					IRCMessage msg;
 
 					if (rawLine.contains("PRIVMSG " + getCurrentChannelName())) {
 						String trigger = facts.containsTrigger(rawLine);
@@ -75,9 +74,10 @@ public class PercivalBot extends IRCBot {
 					}
 				}
 			} catch (IOException e) {
+				log.error("Check your internet connection, file permissions");
 				e.printStackTrace();
 			} finally { //ensure network & file I/O is closed
-				log.error("Line came out as null, closing all streams, killing this thread..");
+				log.error("Line came out as null, closing all streams, letting thread die...");
 				try {
 					pc.getBr().close();
 					pc.getBw().close();
@@ -101,12 +101,11 @@ public class PercivalBot extends IRCBot {
 		String pass = "";
 
 		try {
-			pass = Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).toString();
+			pass = Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		pass = pass.replace("[", "").replace("]", "");
 		return pass;
 	}
 }

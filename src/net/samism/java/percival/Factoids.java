@@ -46,14 +46,11 @@ public final class Factoids {
 		line = line.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
 
 		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
-		log.info(regex);
+
 		Pattern req = Pattern.compile(regex);
-		log.info(req.toString());
 		Matcher match = req.matcher(line);
-		log.info(match.toString());
 
 		return match.find() ? match.group() : null;
-
 	}
 
 	public final String getFactoid(String command) throws JSONException {
@@ -118,5 +115,9 @@ public final class Factoids {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Set<String> getTriggers(){
+		return this.triggers;
 	}
 }

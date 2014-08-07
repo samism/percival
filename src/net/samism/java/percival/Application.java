@@ -2,6 +2,7 @@ package net.samism.java.percival;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * Percival is an IRC bot, made from scratch.
  */
 public final class Application {
-	private ArrayList<PercivalBot> botInstances;
+	private List<PercivalBot> botInstances;
 
 	public static void main(String[] args) {
 		new Application();

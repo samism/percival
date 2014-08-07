@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 import static net.samism.java.percival.Application.exit;
 
@@ -39,7 +40,7 @@ public class IRCBot implements IRCFunctions {
 	private String botName;
 	private String serverName;
 	private int port;
-	private ArrayList<String> channels;
+	private List<String> channels;
 
 	private String currentChannel;
 
