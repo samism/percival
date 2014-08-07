@@ -3,13 +3,12 @@ package net.samism.java.percival;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import static net.samism.java.percival.Application.botInstances;
-import static net.samism.java.percival.Application.exit;
+import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +18,8 @@ import static net.samism.java.percival.Application.exit;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
+	private static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
+			"/src/net/samism/java/percival/config/percy.config";
 	public static final String TRIGGER = "p>";
 
 	private final Connection c = new PercivalBot.Connection(this);
@@ -36,6 +37,7 @@ public class PercivalBot extends IRCBot {
 		send("USER " + getBotName() + " 0 * :" + getBotName());
 
 		connection.start();
+		log.info("starting thread");
 	}
 
 	class Connection implements Runnable {
@@ -46,6 +48,7 @@ public class PercivalBot extends IRCBot {
 		}
 
 		public void run() {
+			log.info("thread started");
 			try {
 				String rawLine;
 
@@ -54,12 +57,17 @@ public class PercivalBot extends IRCBot {
 
 					IRCMessage msg; //The message is raw by default.
 
-					if (rawLine.contains("PRIVMSG " + getCurrentChannelName()) && facts.containsTrigger(rawLine)) {
-						msg = new FactoidMessage(rawLine, pc, facts);
-						pc.sendChannel(msg.getResponse());
-					} else if (rawLine.contains("PRIVMSG " + getCurrentChannelName() + " :" + TRIGGER)) { //eg. p>owner
-						msg = new FunctionalMessage(rawLine, pc, facts);
-						pc.sendChannel(msg.getResponse());
+					if (rawLine.contains("PRIVMSG " + getCurrentChannelName())) {
+						String trigger = facts.containsTrigger(rawLine);
+						String cleanedLine = cleanLine(rawLine);
+
+						if (cleanedLine.startsWith(TRIGGER)) {
+							msg = new FunctionalMessage(rawLine, pc, facts);
+							pc.sendChannel(msg.getResponse());
+						} else if (trigger != null) {
+							msg = new FactoidMessage(rawLine, trigger, pc, facts);
+							pc.sendChannel(msg.getResponse());
+						}
 					} else {
 						msg = new ServerMessage(rawLine, pc);
 						if (msg.getResponse() != null)
@@ -77,11 +85,11 @@ public class PercivalBot extends IRCBot {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
-				botInstances.remove(pc); //remove this object from the list
-				if (botInstances.isEmpty())
-					exit();
 			}
+		}
+
+		private String cleanLine(String rawLine) {
+			return rawLine.substring(nthIndexOf(rawLine, ":", 2) + 1);
 		}
 	}
 
@@ -91,15 +99,14 @@ public class PercivalBot extends IRCBot {
 
 	private String loadIdentPass() {
 		String pass = "";
-		log.info(new File(".").getAbsoluteFile().toString());
 
 		try {
-			pass = new Scanner(
-					new File("out/production/IRC Bot (Percival)/net/samism/java/percival/config/percy.config")).next();
-		} catch (FileNotFoundException e) {
+			pass = Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).toString();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		pass = pass.replace("[", "").replace("]", "");
 		return pass;
 	}
 }

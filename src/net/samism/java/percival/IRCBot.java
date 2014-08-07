@@ -43,20 +43,22 @@ public class IRCBot implements IRCFunctions {
 
 	private String currentChannel;
 
-	private BufferedReader br;
-	private BufferedWriter bw;
 	private Socket irc;
+	private BufferedWriter bw;
+	private BufferedReader br;
 
 
 	//todo: encapsulate all these arguments into an Object, perhaps omit botName
 	public IRCBot(String botName, String serverName, String[] channels, int port) {
-		this.setBotName(botName);
-		this.setServerName(serverName);
-		this.setPort(port);
+		this.botName = botName;
+		this.serverName = serverName;
+		this.port = port;
 		this.channels = new ArrayList<>();
 
 		Collections.addAll(this.channels, channels);
 		this.currentChannel = this.channels.get(0); //for now. todo: how to determine which channel is the "current"?
+
+		connect();
 	}
 
 	@Override
@@ -144,7 +146,7 @@ public class IRCBot implements IRCFunctions {
 		return isEmpty;
 	}
 
-	public final static String getDate(String format) {
+	public static String getDate(String format) {
 		return new SimpleDateFormat(format).
 				format(Calendar.getInstance().getTime());
 	}
@@ -157,24 +159,12 @@ public class IRCBot implements IRCFunctions {
 		return this.currentChannel;
 	}
 
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
-
 	public String getServerName() {
 		return this.serverName;
 	}
 
-	public void setBotName(String botName) {
-		this.botName = botName;
-	}
-
 	public String getBotName() {
 		return this.botName;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
 	}
 
 	public BufferedReader getBr() {

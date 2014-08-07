@@ -1,6 +1,8 @@
 package net.samism.java.percival;
 
-import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
+import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,26 +12,28 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  */
 
 public class FactoidMessage extends IRCMessage {
+	private static final Logger log = LoggerFactory.getLogger(FactoidMessage.class);
 	private Factoids facts;
+	private String trigger;
 
-	public FactoidMessage(String s, PercivalBot pc, Factoids facts) {
+	public FactoidMessage(String s, String trigger, PercivalBot pc, Factoids facts) {
 		super(s, pc);
 		this.facts = facts;
+		this.trigger = trigger;
 	}
 
 	@Override
 	public String getResponse() {
-		String command = msg.substring(nthIndexOf(msg, ":", 2) + 1);
+		String factoid = "";
 
-		if (command.contains(":")) {
-			command = msg.split(":")[1];
-		} else if (command.contains(",")) {
-			command = msg.split(",")[1];
+		try {
+			factoid = facts.getFactoid(trigger);
+		} catch (JSONException e) {
+			log.info("Problem finding the JSON entry for: " + trigger);
+			e.printStackTrace();
 		}
 
-		command = command.trim();
-
-		return facts.getFactoid(command);
+		return factoid;
 	}
 
 	@Override

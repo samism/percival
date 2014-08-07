@@ -12,21 +12,25 @@ import java.util.ArrayList;
  * Percival is an IRC bot, made from scratch.
  */
 public final class Application {
-	static ArrayList<PercivalBot> botInstances;
+	private ArrayList<PercivalBot> botInstances;
 
-	public static void main(int[] args) {
+	public static void main(String[] args) {
+		new Application();
+	}
+
+	public Application() {
 		botInstances = new ArrayList<>();
 
 		try {
-			botInstances.add(new PercivalBot("Percival", "irc.foonetic.net", new String[]{"test"}, 6667));
-			botInstances.add(new PercivalBot("Percival", "irc.awfulnet.org", new String[]{"programming"}, 6667));
-			botInstances.add(new PercivalBot("Percival", "irc.freenode.net", new String[]{"#java"}, 6667)); //intentional #
-			botInstances.add(new PercivalBot("Percival", "irc.strictfp.com", new String[]{"rscode"}, 6667));
+			botInstances.add(new PercivalBot("Percival", "irc.foonetic.net", new String[]{"#test"}, 6667));
+//			botInstances.add(new PercivalBot("Percival", "irc.awfulnet.org", new String[]{"#programming"}, 6667));
+//			botInstances.add(new PercivalBot("Percival", "irc.freenode.net", new String[]{"##java"}, 6667));
+//			botInstances.add(new PercivalBot("Percival", "irc.strictfp.com", new String[]{"#rscode"}, 6667));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		botInstances.forEach(PercivalBot::connect); //join all servers; todo: join all channels
+		//botInstances.forEach(PercivalBot::connect); //join all servers; todo: join all channels
 	}
 
 	public static void exit() {

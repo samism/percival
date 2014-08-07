@@ -1,5 +1,6 @@
 package net.samism.java.percival;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -39,17 +41,22 @@ public final class Factoids {
 		this.triggers = facts.keySet();
 	}
 
-	public final boolean containsTrigger(String line) {
+	public final String containsTrigger(String line) {
 		//todo: allow more than one trigger for a given factoid
-		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
 		line = line.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
 
+		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
+		log.info(regex);
 		Pattern req = Pattern.compile(regex);
+		log.info(req.toString());
+		Matcher match = req.matcher(line);
+		log.info(match.toString());
 
-		return req.matcher(line).find();
+		return match.find() ? match.group() : null;
+
 	}
 
-	public final String getFactoid(String command) {
+	public final String getFactoid(String command) throws JSONException {
 		return (String) facts.get(command);
 	}
 
