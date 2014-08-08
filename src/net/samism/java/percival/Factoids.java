@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public final class Factoids {
 	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
 	private static final String PATH_TO_JSON = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-			"/src/net/samism/java/percival/factoids.json";
+			"/src/net/samism/java/percival/misc/factoids.json";
 
 	private final JSONObject facts;
 	private final Set<String> triggers;
