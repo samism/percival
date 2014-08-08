@@ -1,8 +1,12 @@
 package net.samism.java.percival;
 
+import net.samism.java.StringUtils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +50,9 @@ public class FunctionalMessage extends IRCMessage {
 			case "owner":
 				response = PercivalBot.OWNER;
 				break;
+			case "you":
+				response = "My source code is at: https://github.com/samism/percival";
+				break;
 			case "factoids": {
 				Set<String> s = facts.getTriggers();
 
@@ -57,9 +64,43 @@ public class FunctionalMessage extends IRCMessage {
 			default: {
 				//handle mutli-argument functions here
 
+				if(function.startsWith("url-encode")){
+					if (!function.contains(" ")) {
+						return author + ", follow this form: " + PercivalBot.TRIGGER +
+								"[command] [argument]";
+					}
+
+					response = "Encoded in UTF-8: ";
+
+					try {
+						response += URLEncoder.encode(function.substring(nthIndexOf(function, " ", 1) + 1), "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if(function.startsWith("url-decode")){
+					if (!function.contains(" ")) {
+						return author + ", follow this form: " + PercivalBot.TRIGGER +
+								"[command] [argument]";
+					}
+
+					String s = function.substring(nthIndexOf(function, " ", 1) + 1);
+					s = s.replaceAll("(?i)%0A", "").replaceAll("(?i)%0D", ""); //rid of LF and CR, ignore-case
+
+					response = "Decoded in UTF-8: ";
+					try {
+						response += StringUtils.decodeCompletely(s);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e){
+						response += "couldn't decode. Incorrectly encoded?";
+						e.printStackTrace();
+					}
+				}
+
 				//adding/remove a factoid. command form: add/remove [trigger] [response]
 				if (function.startsWith("add")) {
-					System.out.println(countOccurrences(' ', function));
 					if (countOccurrences(' ', function) < 2) { //2 or more spaces to be valid
 						return author + ", to add a factoid follow this form: " + PercivalBot.TRIGGER +
 								"add [trigger] [response]";
@@ -89,7 +130,7 @@ public class FunctionalMessage extends IRCMessage {
 							break;
 					}
 
-					response = author + ", I unlearned that.";
+					response = author + ", I unlearned " + (args.size() > 1 ? "those" : "that") + ".";
 				}
 			}
 		}

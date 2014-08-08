@@ -24,7 +24,7 @@ public final class Application {
 
 		try {
 			botInstances.add(new PercivalBot("Percival", "irc.foonetic.net", new String[]{"#test"}, 6667));
-//			botInstances.add(new PercivalBot("Percival", "irc.awfulnet.org", new String[]{"#programming"}, 6667));
+			botInstances.add(new PercivalBot("Percival", "irc.awfulnet.org", new String[]{"#programming"}, 6667));
 //			botInstances.add(new PercivalBot("Percival", "irc.freenode.net", new String[]{"##java"}, 6667));
 //			botInstances.add(new PercivalBot("Percival", "irc.strictfp.com", new String[]{"#rscode"}, 6667));
 		} catch (IOException e) {
