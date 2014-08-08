@@ -1,16 +1,21 @@
 package net.samism.java.percival;
 
 import net.samism.java.StringUtils.StringUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static net.samism.java.StringUtils.StringUtils.countOccurrences;
 import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
@@ -61,39 +66,70 @@ public class FunctionalMessage extends IRCMessage {
 
 				break;
 			}
-			default: {
-				//handle mutli-argument functions here
+			default: { //handle mutli-argument functions here
+				if (function.startsWith("translate")) {
+					//check if form valid
+					String regex = "^translate ([a-z]{2}->[a-z]{2}) .+";
 
-				if(function.startsWith("url-encode")){
-					if (!function.contains(" ")) {
+					Pattern p = Pattern.compile(regex);
+					Matcher m = p.matcher(function);
+
+					if (!m.find()) {
 						return author + ", follow this form: " + PercivalBot.TRIGGER +
-								"[command] [argument]";
+								"translate [from-language]->[to-language] [text]";
 					}
 
-					response = "Encoded in UTF-8: ";
-
 					try {
-						response += URLEncoder.encode(function.substring(nthIndexOf(function, " ", 1) + 1), "UTF-8");
-					} catch (UnsupportedEncodingException e) {
+						String from = function.split(" ")[1].split("->")[0];
+						String to = function.split(" ")[1].split("->")[1];
+						String text = function.substring(nthIndexOf(function, " ", 2) + 1);
+
+						URL url = new URL("http://api.mymemory.translated.net/get?q=" + URLEncoder.encode(text, "UTF-8")
+								+ "&langpair=" + from + "|" + to);
+						JSONTokener tokener = new JSONTokener(url.openStream());
+						JSONObject object = new JSONObject(tokener);
+
+						String translation = (String) object.getJSONObject("responseData").get("translatedText");
+						if (translation.contains("IS AN INVALID TARGET LANGUAGE"))
+							return "Invalid target language. Please provide a valid 2 character ISO country code.";
+
+						response = translation;
+					} catch (IOException e) {
 						e.printStackTrace();
+						return "Something went wrong with this translation.";
 					}
 				}
 
-				if(function.startsWith("url-decode")){
+				if (function.startsWith("url-encode")) {
 					if (!function.contains(" ")) {
 						return author + ", follow this form: " + PercivalBot.TRIGGER +
-								"[command] [argument]";
+								"url-encode [text]";
 					}
 
-					String s = function.substring(nthIndexOf(function, " ", 1) + 1);
-					s = s.replaceAll("(?i)%0A", "").replaceAll("(?i)%0D", ""); //rid of LF and CR, ignore-case
-
-					response = "Decoded in UTF-8: ";
 					try {
+						response = "In UTF-8: ";
+						response += URLEncoder.encode(function.substring(nthIndexOf(function, " ", 1) + 1), "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+						response += "couldn't encode.";
+					}
+				}
+
+				if (function.startsWith("url-decode")) {
+					if (!function.contains(" ")) {
+						return author + ", follow this form: " + PercivalBot.TRIGGER +
+								"url-decode [text]";
+					}
+
+					try {
+						String s = function.substring(nthIndexOf(function, " ", 1) + 1);
+						s = s.replaceAll("(?i)%0A", "").replaceAll("(?i)%0D", ""); //rid of LF and CR, ignore-case
+
+						response = "In UTF-8: ";
 						response += StringUtils.decodeCompletely(s);
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
-					} catch (IllegalArgumentException e){
+					} catch (IllegalArgumentException e) {
 						response += "couldn't decode. Incorrectly encoded?";
 						e.printStackTrace();
 					}
