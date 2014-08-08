@@ -25,7 +25,7 @@ public class IRCBot implements IRCFunctions {
 	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
 
 	public static final String OWNER = "ffs82defxp";
-	private static final String NL = "\r\n";
+	public static final String NL = "\r\n";
 
 	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
 	private static final File LOGS_DIR = new File("percy-logs"); // logs directory
@@ -40,8 +40,8 @@ public class IRCBot implements IRCFunctions {
 	private String botName;
 	private String serverName;
 	private int port;
-	private List<String> channels;
 
+	private List<String> channels;
 	private String currentChannel;
 
 	private Socket irc;
@@ -178,5 +178,10 @@ public class IRCBot implements IRCFunctions {
 
 	public Socket getIRCSocket() {
 		return this.irc;
+
+	}
+
+	public List<String> getChannels() {
+		return this.channels;
 	}
 }

@@ -34,7 +34,7 @@ public class FunctionalMessage extends IRCMessage {
 
 	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.function = msg.split(PercivalBot.TRIGGER)[1].trim();
+		this.function = msg.substring(msg.indexOf(PercivalBot.TRIGGER) + 2).trim();
 		this.facts = facts;
 	}
 
@@ -64,7 +64,7 @@ public class FunctionalMessage extends IRCMessage {
 			case "factoids": {
 				Set<String> s = facts.getTriggers();
 
-				response = "Here are my factoids: ";
+				response = "Here are my factoids (" + s.size() + ") : ";
 				response += s.toString();
 
 				break;
@@ -93,8 +93,11 @@ public class FunctionalMessage extends IRCMessage {
 						JSONObject object = new JSONObject(tokener);
 
 						String translation = (String) object.getJSONObject("responseData").get("translatedText");
+
 						if (translation.contains("IS AN INVALID TARGET LANGUAGE"))
 							return "Invalid target language. Please provide a valid 2 character ISO country code.";
+						if (translation.contains("PLEASE SELECT TWO DISTINCT LANGUAGES"))
+							return "Please select two distinct languages.";
 
 						response = translation;
 					} catch (IOException e) {
@@ -105,8 +108,7 @@ public class FunctionalMessage extends IRCMessage {
 
 				if (function.startsWith("url-encode")) {
 					if (!function.contains(" ")) {
-						return author + ", follow this form: " + PercivalBot.TRIGGER +
-								"url-encode [text]";
+						return author + ", follow this form: " + PercivalBot.TRIGGER + "url-encode [text]";
 					}
 
 					try {
@@ -120,8 +122,7 @@ public class FunctionalMessage extends IRCMessage {
 
 				if (function.startsWith("url-decode")) {
 					if (!function.contains(" ")) {
-						return author + ", follow this form: " + PercivalBot.TRIGGER +
-								"url-decode [text]";
+						return author + ", follow this form: " + PercivalBot.TRIGGER + "url-decode [text]";
 					}
 
 					try {

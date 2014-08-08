@@ -34,7 +34,12 @@ public class ServerMessage extends IRCMessage {
 		} else if (rawMsg.contains("This nickname is registered.")) {
 			return "PRIVMSG NickServ :identify " + pc.getIdentPass();
 		} else if (rawMsg.contains(":You are now identified")) {
-			return "JOIN " + pc.getCurrentChannelName();
+			String join = "";
+
+			for(String channel : pc.getChannels()) //join all channels for this network
+				join += "JOIN " + channel + PercivalBot.NL;
+
+			return join;
 		}
 
 		return null;
