@@ -33,10 +33,8 @@ public final class Factoids {
 
 	private final JSONObject facts;
 	private final Set<String> triggers;
-	private final PercivalBot pc;
 
-	public Factoids(PercivalBot pc) {
-		this.pc = pc;
+	public Factoids() {
 		this.facts = loadJSON(PATH_TO_JSON);
 		this.triggers = facts.keySet();
 	}
@@ -65,21 +63,20 @@ public final class Factoids {
 	}
 
 	private String loadFile(String path) {
-		StringBuilder sb = new StringBuilder();
-		List<String> lines = null;
-
 		try {
-			lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+			StringBuilder sb = new StringBuilder();
+			List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+
+			if (lines != null) {
+				for (String s : lines)
+					sb.append(s);
+			}
+
+			return sb.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Error loading factoid file.");
+			return "Error loading factoid file.";
 		}
-
-		if (lines != null) {
-			for (String s : lines)
-				sb.append(s);
-		}
-
-		return sb.toString();
 	}
 
 	//convert a Set of strings to a single regex String delimited with |
@@ -98,26 +95,24 @@ public final class Factoids {
 	}
 
 	public final void add(String t, String r) {
-		facts.put(t, r); //add pair to JSON object
-
 		try {
+			facts.put(t, r); //add pair to JSON object
 			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Problem writing JSON to file");
 		}
 	}
 
 	public final void remove(String t) {
-		facts.remove(t);
-
 		try {
+			facts.remove(t); //remove pair from JSON object
 			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Problem writing JSON to file");
 		}
 	}
 
-	public Set<String> getTriggers(){
+	public Set<String> getTriggers() {
 		return this.triggers;
 	}
 }

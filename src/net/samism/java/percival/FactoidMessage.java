@@ -24,16 +24,12 @@ public class FactoidMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		String factoid = "";
-
 		try {
-			factoid = facts.getFactoid(trigger);
+			return facts.getFactoid(trigger);
 		} catch (JSONException e) {
 			log.info("Problem finding the JSON entry for: " + trigger);
-			e.printStackTrace();
+			return "Problem finding the JSON entry for: " + trigger;
 		}
-
-		return factoid;
 	}
 
 	@Override

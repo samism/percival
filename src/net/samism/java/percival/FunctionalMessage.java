@@ -47,6 +47,8 @@ public class FunctionalMessage extends IRCMessage {
 			case "exit":
 				Application.exit();
 			case "hi":
+			case "hello":
+			case "sup":
 				response = "Sup, " + author;
 				break;
 			case "date":
@@ -56,6 +58,7 @@ public class FunctionalMessage extends IRCMessage {
 				response = PercivalBot.OWNER;
 				break;
 			case "you":
+			case "source":
 				response = "My source code is at: https://github.com/samism/percival";
 				break;
 			case "factoids": {
@@ -69,7 +72,7 @@ public class FunctionalMessage extends IRCMessage {
 			default: { //handle mutli-argument functions here
 				if (function.startsWith("translate")) {
 					//check if form valid
-					String regex = "^translate ([a-z]{2}->[a-z]{2}) .+";
+					String regex = "^translate ([a-z]{2}->[a-z]{2}).+";
 
 					Pattern p = Pattern.compile(regex);
 					Matcher m = p.matcher(function);

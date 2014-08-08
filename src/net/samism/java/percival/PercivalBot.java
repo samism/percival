@@ -19,14 +19,14 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
-	private static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-			"/src/net/samism/java/percival/misc/percy.config";
-	public static final String TRIGGER = "p>";
+	private static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/" +
+			"projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/percy.config";
+	public static final String TRIGGER = "p.";
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
-	public final Factoids facts = new Factoids(this);
+	public final Factoids facts = new Factoids();
 	private final String identPass;
 
 	public PercivalBot(String botName, String serverName, String[] channels, int port) throws IOException {
@@ -97,15 +97,7 @@ public class PercivalBot extends IRCBot {
 		return identPass;
 	}
 
-	private String loadIdentPass() {
-		String pass = "";
-
-		try {
-			pass = Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return pass;
+	private String loadIdentPass() throws IOException {
+		return Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
 	}
 }
