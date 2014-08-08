@@ -57,8 +57,8 @@ public class PercivalBot extends IRCBot {
 					IRCMessage msg;
 
 					if (rawLine.contains("PRIVMSG " + getCurrentChannelName())) {
-						String trigger = facts.containsTrigger(rawLine);
 						String cleanedLine = cleanLine(rawLine);
+						String trigger = facts.containsTrigger(cleanedLine);
 
 						if (cleanedLine.startsWith(TRIGGER)) {
 							msg = new FunctionalMessage(rawLine, pc, facts);

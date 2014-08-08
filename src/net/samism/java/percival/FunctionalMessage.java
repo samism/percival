@@ -60,7 +60,7 @@ public class FunctionalMessage extends IRCMessage {
 				//adding/remove a factoid. command form: add/remove [trigger] [response]
 				if (function.startsWith("add")) {
 					System.out.println(countOccurrences(' ', function));
-					if (countOccurrences(' ', function) != 2) { //exactly 2 spaces
+					if (countOccurrences(' ', function) < 2) { //2 or more spaces to be valid
 						return author + ", to add a factoid follow this form: " + PercivalBot.TRIGGER +
 								"add [trigger] [response]";
 					}
@@ -83,7 +83,6 @@ public class FunctionalMessage extends IRCMessage {
 					args.remove(0);
 
 					for (String t : args) {
-						log.info("removed " + t);
 						facts.remove(t);
 
 						if (!isFromOwner()) //only let me remove more than one factoid
