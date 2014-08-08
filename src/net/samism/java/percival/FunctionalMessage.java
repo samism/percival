@@ -3,10 +3,13 @@ package net.samism.java.percival;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
-import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 import static net.samism.java.StringUtils.StringUtils.countOccurrences;
+import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,7 +58,7 @@ public class FunctionalMessage extends IRCMessage {
 				//handle mutli-argument functions here
 
 				//adding/remove a factoid. command form: add/remove [trigger] [response]
-				if (function.startsWith("add")){
+				if (function.startsWith("add")) {
 					System.out.println(countOccurrences(' ', function));
 					if (countOccurrences(' ', function) != 2) { //exactly 2 spaces
 						return author + ", to add a factoid follow this form: " + PercivalBot.TRIGGER +
@@ -70,15 +73,23 @@ public class FunctionalMessage extends IRCMessage {
 					response = author + ", I learned that.";
 				}
 
-				if(function.startsWith("remove") && isFromOwner()){
-					if(!function.contains(" ")) {
+				if (function.startsWith("remove")) {
+					if (!function.contains(" ")) {
 						return author + ", to remove a factoid follow this form: " + PercivalBot.TRIGGER +
 								"remove [trigger]";
 					}
-					String[] args = function.split(" ");
-					String t = args[1]; //trigger
 
-					facts.remove(t);
+					List<String> args = new ArrayList<>(Arrays.asList(function.split(" ")));
+					args.remove(0);
+
+					for (String t : args) {
+						log.info("removed " + t);
+						facts.remove(t);
+
+						if (!isFromOwner()) //only let me remove more than one factoid
+							break;
+					}
+
 					response = author + ", I unlearned that.";
 				}
 			}
