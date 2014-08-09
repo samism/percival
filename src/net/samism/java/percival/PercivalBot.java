@@ -19,10 +19,7 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  */
 public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
-	private static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/" +
-			"projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/percy.config";
-	public static final String BOT_COMMAND_PREFIX = "p.";
-	public static final String BOT_NAME = "Percival";
+
 	private final String identPass = loadIdentPass(); //needed to protect the identify password
 
 	private final Connection c = new PercivalBot.Connection(this);
@@ -52,7 +49,7 @@ public class PercivalBot extends IRCBot {
 				String rawLine;
 
 				while ((rawLine = pc.getBr().readLine()) != null) { //if its null, thread dies
-					logConsole(">>>" + rawLine); //log to the console immediately
+					logConsole(">>>" + rawLine); //logs to the console immediately
 
 					IRCMessage msg;
 

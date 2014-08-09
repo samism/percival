@@ -1,8 +1,5 @@
 package net.samism.java.percival;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail

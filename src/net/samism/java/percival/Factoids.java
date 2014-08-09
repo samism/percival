@@ -40,7 +40,6 @@ public final class Factoids {
 	}
 
 	public final String containsTrigger(String line) {
-		//todo: allow more than one trigger for a given factoid
 		line = line.toLowerCase();
 
 		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"

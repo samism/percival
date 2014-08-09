@@ -23,9 +23,13 @@ public class IRCBot implements IRCFunctions {
 
 	public static final String OWNER = "ffs82defxp";
 	public static final String NL = "\r\n";
+	public static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/" +
+			"projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/percy.config";
+	public static final String BOT_NAME = "Percival";
+	public static final String BOT_COMMAND_PREFIX = "p.";
 
+	private static final File LOGS_DIR = new File("logs"); // logs directory
 	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
-	private static final File LOGS_DIR = new File("percy-logs"); // logs directory
 
 	private static final FileWriter fw = null;
 
@@ -38,15 +42,13 @@ public class IRCBot implements IRCFunctions {
 	private String serverName;
 	private int port;
 
-	private List<String> channels = new ArrayList<>();
-	private volatile String currentChannel;
-
 	private Socket irc;
 	private BufferedWriter bw;
 	private BufferedReader br;
 
+	private List<String> channels = new ArrayList<>();
+	private volatile String currentChannel;
 
-	//todo: encapsulate all these arguments into an Object, perhaps omit botName
 	public IRCBot(String botName, String serverName, String[] channels, int port) {
 		this.botName = botName;
 		this.serverName = serverName;
