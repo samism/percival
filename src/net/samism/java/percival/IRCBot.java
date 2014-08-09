@@ -92,22 +92,22 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void join(String chan) throws IOException {
-		sendChannel("/join " + chan);
+		send("JOIN " + chan);
 	}
 
 	@Override
 	public void leaveChannel() throws IOException {
-		sendChannel("/part " + currentChannel);
+		send("PART " + currentChannel);
 	}
 
 	@Override
 	public void leaveChannel(String partMsg) throws IOException {
-		sendChannel("/part " + currentChannel + " " + partMsg);
+		send("PART " + currentChannel + " " + partMsg);
 	}
 
 	@Override
 	public void leaveAllChannels() throws IOException {
-		sendChannel("/join 0"); // "/join 0" same effect as /partall
+		send("JOIN 0"); // "join 0" same effect as /partall
 	}
 
 	@Override

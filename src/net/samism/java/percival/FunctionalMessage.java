@@ -161,7 +161,8 @@ public class FunctionalMessage extends IRCMessage {
 					}
 
 					List<String> args = new ArrayList<>(Arrays.asList(function.split(" ")));
-					args.remove(0);
+					args.remove(0); //get rid of actual command
+					int num = args.size(); //initial number of factoids requested to be removed
 
 					for (String t : args) {
 						facts.remove(t);
@@ -170,7 +171,7 @@ public class FunctionalMessage extends IRCMessage {
 							break;
 					}
 
-					response = author + ", I unlearned " + (args.size() > 1 ? "those" : "that") + ".";
+					response = author + ", I unlearned " + ((num > 1 && isFromOwner()) ? "those" : "that") + ".";
 				}
 			}
 		}
