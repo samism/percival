@@ -16,13 +16,28 @@ public abstract class Function {
 	FunctionalMessage message;
 	String line;
 
-	Pattern p; //ready for initialization in #matches(String line)
-	Matcher m;
-
 	public Function(FunctionalMessage message) {
 		this.message = message;
 		this.line = message.getMsg().replaceFirst(PercivalBot.BOT_COMMAND_PREFIX, "").trim();
 	}
+
+	/**
+	 * Actually does what the Function was created to do, e.g. obtain the date, translate a string, URL encode, ...
+	 *
+	 * @return A String representing the result of the Function, or if it failed, an appropriate String describing
+	 * the reason for the failure.
+	 */
+	public abstract String perform();
+
+	/**
+	 * Determines whether this is the appropriate subclass of Function to handle the request.
+	 * The criteria is usually a regex that conforms to this class's implementation of the format requested by
+	 * getSyntax().
+	 *
+	 * @return True if the line matches the given regex, signaling to respond, or false if otherwise.
+	 * @see Function#getSyntax();
+	 */
+	public abstract boolean matches();
 
 	/**
 	 * For informing the user what the correct way to structure this Function is, syntacticly.
@@ -34,25 +49,9 @@ public abstract class Function {
 	public abstract String getSyntax();
 
 	/**
-	 * Determines whether this is the appropriate subclass of Function to handle the request.
-	 * The criteria is usually a regex that conforms to this class's implementation of the syntax in getSyntax()
+	 * Must implement so that the purpose of the function, as a verb, could be later retrieved.
 	 *
-	 * @return True if the line matches the given regex, signaling to respond, or false if otherwise.
-	 */
-	public abstract boolean matches();
-
-	/**
-	 * Actually does what the Function was created to do, e.g. obtain the date, translate a string, URL encode, ...
-	 *
-	 * @return A String representing the result of the Function, or if it failed, an appropriate String describing
-	 * the reason for the failure.
-	 */
-	public abstract String perform();
-
-	/**
-	 * Provided so that the purpose of the function, as a verb, could be provided.
-	 *
-	 * @return The names of all the subclasses of this class, exlcuding the "Function" suffix.
+	 * @return The name of any given subclass of this class, exlcuding the "Function" suffix.
 	 */
 	public abstract String toString();
 }

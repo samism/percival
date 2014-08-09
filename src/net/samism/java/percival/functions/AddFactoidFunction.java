@@ -1,10 +1,9 @@
 package net.samism.java.percival.functions;
 
+import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.PercivalBot;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,25 +11,26 @@ import java.util.regex.Pattern;
  * Created with IntelliJ IDEA.
  * User: samism
  * Date: 8/9/14
- * Time: 2:23 AM
+ * Time: 12:40 PM
  */
-public class SyntaxFunction extends Function {
-	public SyntaxFunction(FunctionalMessage message) {
+public class AddFactoidFunction extends Function {
+	public AddFactoidFunction(FunctionalMessage message) {
 		super(message);
 	}
 
 	@Override
 	public String perform() {
-		Map<String, String> table = new LinkedHashMap<>();
-		for (Function f : message.getFunctionObjects())
-			table.put(f.toString(), f.getSyntax());
+		String[] args = line.split(" ");
+		String t = args[1]; //trigger
+		String r = line.substring(StringUtils.nthIndexOf(line, " ", 2)); //response
 
-		return table.toString();
+		message.getFactoidsObject().add(t, r);
+		return message.getAuthor() + ", I learned that.";
 	}
 
 	@Override
 	public boolean matches() {
-		String regex = "^\\?$";
+		String regex = "^add [^\\r\\n]+ [^\\r\\n]+";
 
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(line);
@@ -40,11 +40,11 @@ public class SyntaxFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "?";
+		return PercivalBot.BOT_COMMAND_PREFIX + "add [trigger] [response]";
 	}
 
 	@Override
 	public String toString() {
-		return "Syntax";
+		return "Add-Factoid";
 	}
 }

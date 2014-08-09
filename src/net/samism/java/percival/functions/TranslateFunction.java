@@ -25,21 +25,6 @@ public class TranslateFunction extends Function {
 	}
 
 	@Override
-	public boolean matches(){
-		String regex = "^trans(late)? ([a-z]{2}->[a-z]{2}).+";
-
-		p = Pattern.compile(regex);
-		m = p.matcher(line);
-
-		return m.find();
-	}
-
-	@Override
-	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "trans(late) [from-language]->[to-language] [text]";
-	}
-
-	@Override
 	public String perform() {
 		String response;
 
@@ -67,6 +52,21 @@ public class TranslateFunction extends Function {
 		}
 
 		return response;
+	}
+
+	@Override
+	public boolean matches(){
+		String regex = "^trans(late)? ([a-z]{2}->[a-z]{2}).+";
+
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(line);
+
+		return m.find();
+	}
+
+	@Override
+	public String getSyntax() {
+		return PercivalBot.BOT_COMMAND_PREFIX + "trans(late) [from-language]->[to-language] [text]";
 	}
 
 	@Override

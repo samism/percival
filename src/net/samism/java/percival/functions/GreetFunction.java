@@ -14,6 +14,10 @@ public class GreetFunction extends Function {
 		super(message);
 	}
 
+	@Override
+	public String perform() {
+		return message.getAuthor() + ", how's it going????";
+	}
 
 	@Override
 	public boolean matches(){
@@ -25,10 +29,6 @@ public class GreetFunction extends Function {
 		return PercivalBot.BOT_COMMAND_PREFIX + "sup bro";
 	}
 
-	@Override
-	public String perform() {
-		return message.getAuthor() + ", how's it going????";
-	}
 
 	@Override
 	public String toString(){
