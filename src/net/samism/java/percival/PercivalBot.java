@@ -21,22 +21,22 @@ public class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
 	private static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/" +
 			"projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/percy.config";
-	public static final String TRIGGER = "p.";
+	public static final String BOT_COMMAND_PREFIX = "p.";
+	public static final String BOT_NAME = "Percival";
+	private final String identPass = loadIdentPass(); //needed to protect the identify password
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
 	public final Factoids facts = new Factoids();
-	private final String identPass;
 
-	public PercivalBot(String botName, String serverName, String[] channels, int port) throws IOException {
-		super(botName, serverName, channels, port);
-
-		identPass = loadIdentPass(); //needed to protect the identify password
+	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
+		super(BOT_NAME, serverName, channels, port);
 
 		send("NICK " + getBotName());
 		send("USER " + getBotName() + " 0 * :" + getBotName());
 
+		connect(this);
 		connection.start();
 	}
 
@@ -56,11 +56,16 @@ public class PercivalBot extends IRCBot {
 
 					IRCMessage msg;
 
+					//todo: fix bug where only responds to the first channel.
+					//modifying the currentChannel variable might not be threadsafe.
+					//Should there be a new instance of PercivalBot for each channel instead of just for each network?
+					//Nested threads?
 					if (rawLine.contains("PRIVMSG " + getCurrentChannelName())) {
+						//if (rawLine.contains("PRIVMSG ")) {
 						String cleanedLine = cleanLine(rawLine);
 						String trigger = facts.containsTrigger(cleanedLine);
 
-						if (cleanedLine.startsWith(TRIGGER)) {
+						if (cleanedLine.startsWith(BOT_COMMAND_PREFIX)) {
 							msg = new FunctionalMessage(rawLine, pc, facts);
 							pc.sendChannel(msg.getResponse());
 						} else if (trigger != null) {
@@ -99,5 +104,9 @@ public class PercivalBot extends IRCBot {
 
 	private String loadIdentPass() throws IOException {
 		return Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
+	}
+
+	public Thread getConnection() {
+		return connection;
 	}
 }

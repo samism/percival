@@ -67,15 +67,13 @@ public final class Factoids {
 			StringBuilder sb = new StringBuilder();
 			List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
 
-			if (lines != null) {
-				for (String s : lines)
-					sb.append(s);
-			}
+			for (String s : lines)
+				sb.append(s);
 
 			return sb.toString();
 		} catch (IOException e) {
 			log.error("Error loading factoid file.");
-			return "Error loading factoid file.";
+			return "";
 		}
 	}
 

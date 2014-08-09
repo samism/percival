@@ -11,9 +11,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import static net.samism.java.percival.Application.exit;
-
-
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
@@ -41,8 +38,8 @@ public class IRCBot implements IRCFunctions {
 	private String serverName;
 	private int port;
 
-	private List<String> channels;
-	private String currentChannel;
+	private List<String> channels = new ArrayList<>();
+	private volatile String currentChannel;
 
 	private Socket irc;
 	private BufferedWriter bw;
@@ -54,23 +51,21 @@ public class IRCBot implements IRCFunctions {
 		this.botName = botName;
 		this.serverName = serverName;
 		this.port = port;
-		this.channels = new ArrayList<>();
 
 		Collections.addAll(this.channels, channels);
 		this.currentChannel = this.channels.get(0); //for now. todo: how to determine which channel is the "current"?
-
-		connect();
 	}
 
 	@Override
-	public void connect() {
+	public void connect(PercivalBot pc) {
 		try {
 			irc = new Socket(serverName, port);
 			bw = new BufferedWriter(new OutputStreamWriter(irc.getOutputStream()));
 			br = new BufferedReader(new InputStreamReader(irc.getInputStream()));
 		} catch (IOException e) {
+			Application.destroyBot(pc);
+			log.error("Couldn't connect to this IRC network. Destroying bot instance.");
 			e.printStackTrace();
-			exit();
 		}
 	}
 

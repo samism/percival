@@ -34,7 +34,7 @@ public class FunctionalMessage extends IRCMessage {
 
 	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.function = msg.substring(msg.indexOf(PercivalBot.TRIGGER) + 2).trim();
+		this.function = msg.substring(msg.indexOf(PercivalBot.BOT_COMMAND_PREFIX) + 2).trim();
 		this.facts = facts;
 	}
 
@@ -78,7 +78,7 @@ public class FunctionalMessage extends IRCMessage {
 					Matcher m = p.matcher(function);
 
 					if (!m.find()) {
-						return author + ", follow this form: " + PercivalBot.TRIGGER +
+						return author + ", follow this form: " + PercivalBot.BOT_COMMAND_PREFIX +
 								"translate [from-language]->[to-language] [text]";
 					}
 
@@ -108,7 +108,7 @@ public class FunctionalMessage extends IRCMessage {
 
 				if (function.startsWith("url-encode")) {
 					if (!function.contains(" ")) {
-						return author + ", follow this form: " + PercivalBot.TRIGGER + "url-encode [text]";
+						return author + ", follow this form: " + PercivalBot.BOT_COMMAND_PREFIX + "url-encode [text]";
 					}
 
 					try {
@@ -122,7 +122,7 @@ public class FunctionalMessage extends IRCMessage {
 
 				if (function.startsWith("url-decode")) {
 					if (!function.contains(" ")) {
-						return author + ", follow this form: " + PercivalBot.TRIGGER + "url-decode [text]";
+						return author + ", follow this form: " + PercivalBot.BOT_COMMAND_PREFIX + "url-decode [text]";
 					}
 
 					try {
@@ -142,7 +142,7 @@ public class FunctionalMessage extends IRCMessage {
 				//adding/remove a factoid. command form: add/remove [trigger] [response]
 				if (function.startsWith("add")) {
 					if (countOccurrences(' ', function) < 2) { //2 or more spaces to be valid
-						return author + ", to add a factoid follow this form: " + PercivalBot.TRIGGER +
+						return author + ", to add a factoid follow this form: " + PercivalBot.BOT_COMMAND_PREFIX +
 								"add [trigger] [response]";
 					}
 
@@ -156,7 +156,7 @@ public class FunctionalMessage extends IRCMessage {
 
 				if (function.startsWith("remove")) {
 					if (!function.contains(" ")) {
-						return author + ", to remove a factoid follow this form: " + PercivalBot.TRIGGER +
+						return author + ", to remove a factoid follow this form: " + PercivalBot.BOT_COMMAND_PREFIX +
 								"remove [trigger]";
 					}
 

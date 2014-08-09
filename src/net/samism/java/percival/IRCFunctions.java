@@ -9,7 +9,7 @@ import java.io.IOException;
  * Time: 4:04 AM
  */
 public interface IRCFunctions {
-	void connect();
+	void connect(PercivalBot bot);
 
 	void send(String msg) throws IOException;
 
