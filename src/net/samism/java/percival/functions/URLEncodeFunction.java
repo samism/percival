@@ -45,19 +45,20 @@ public class URLEncodeFunction extends Function {
 		boolean match = m.find();
 
 		if (match) {
-			String s = line.split(" ")[1].toLowerCase(); //if the first word of the text happens to be an encoding
+			String group = m.group(2).trim(); //(encoding) text
+			String firstWord = group.split(" ")[0].toLowerCase(); //if the first word of the text is optional encoding
 
-			line = m.group(2).trim(); //the text to encode
+			line = group; //the text to encode
 
-			switch (s) {
+			switch (firstWord) {
 				case "us-ascii":
 				case "iso-8859-1":
 				case "utf-16be":
 				case "utf-16le":
 				case "utf-16":
 				case "utf-8":
-					encoding = s;
-					line = line.replaceFirst(encoding + " ", "");
+					encoding = firstWord;
+					line = line.replaceFirst(encoding, "").trim();
 					break;
 			}
 		}

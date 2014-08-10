@@ -3,6 +3,8 @@ package net.samism.java.percival.functions;
 import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.PercivalBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
@@ -15,6 +17,8 @@ import java.util.regex.Pattern;
  * Time: 1:50 PM
  */
 public class URLDecodeFunction extends Function {
+	private static final Logger log = LoggerFactory.getLogger(URLDecodeFunction.class);
+
 	String encoding;
 
 	public URLDecodeFunction(FunctionalMessage message) {
@@ -41,18 +45,19 @@ public class URLDecodeFunction extends Function {
 		boolean match = m.find();
 
 		if (match) {
-			String s = line.split(" ")[1].toLowerCase(); //if the first word of the text happens to be an encoding
+			String group = m.group(2).trim(); //(encoding) text
+			String firstWord = group.split(" ")[0].toLowerCase(); //if the first word of the text is optional encoding
 
-			line = m.group(2).trim(); //the text to encode
+			line = group; //the text to encode
 
-			switch (s) {
+			switch (firstWord) {
 				case "us-ascii":
 				case "iso-8859-1":
 				case "utf-16be":
 				case "utf-16le":
 				case "utf-16":
 				case "utf-8":
-					encoding = s;
+					encoding = firstWord;
 					line = line.replaceFirst(encoding, "").trim();
 					break;
 			}
