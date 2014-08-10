@@ -48,7 +48,7 @@ public class RemoveFactoidFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "remove [trigger]";
+		return "remove [trigger]";
 	}
 
 	@Override

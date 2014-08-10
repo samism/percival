@@ -26,7 +26,7 @@ public class URLEncodeFunction extends Function {
 	@Override
 	public String perform() {
 		try {
-			return URLEncoder.encode(line.substring(nthIndexOf(line, " ", 1) + 1), encoding);
+			return URLEncoder.encode(line, encoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "Could not encode that string with " + encoding;
@@ -52,7 +52,7 @@ public class URLEncodeFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "url-e(ncode) (encoding) [text]";
+		return "url-e(ncode) (encoding) [text]";
 	}
 
 	@Override

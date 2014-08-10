@@ -29,11 +29,8 @@ public class PercivalBot extends IRCBot {
 
 	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
 		super(BOT_NAME, serverName, channels, port);
+
 		connect(this);
-
-		send("NICK " + BOT_NAME);
-		send("USER " + BOT_NAME + " 0 * :" + getBotName());
-
 		connection.start();
 	}
 
@@ -46,6 +43,9 @@ public class PercivalBot extends IRCBot {
 
 		public void run() {
 			try {
+				send("NICK " + BOT_NAME);
+				send("USER " + BOT_NAME + " 0 * :" + getBotName());
+
 				String rawLine;
 
 				while ((rawLine = pc.getBr().readLine()) != null) { //if its null, thread dies

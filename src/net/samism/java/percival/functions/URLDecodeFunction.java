@@ -52,7 +52,7 @@ public class URLDecodeFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "url-e(ncode) (encoding) [text]";
+		return "url-e(ncode) (encoding) [text]";
 	}
 
 	@Override

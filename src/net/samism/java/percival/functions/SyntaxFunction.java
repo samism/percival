@@ -23,7 +23,7 @@ public class SyntaxFunction extends Function {
 	public String perform() {
 		Map<String, String> table = new LinkedHashMap<>();
 		for (Function f : message.getFunctionObjects())
-			table.put(f.toString(), f.getSyntax());
+			table.put(f.toString(), PercivalBot.BOT_COMMAND_PREFIX + f.getSyntax());
 
 		return table.toString();
 	}
@@ -40,7 +40,7 @@ public class SyntaxFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "?";
+		return "?";
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class GreetFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "sup bro";
+		return "sup bro";
 	}
 
 

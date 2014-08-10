@@ -66,7 +66,7 @@ public class TranslateFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "trans(late) [from-language]->[to-language] [text]";
+		return "trans(late) [from-language]->[to-language] [text]";
 	}
 
 	@Override

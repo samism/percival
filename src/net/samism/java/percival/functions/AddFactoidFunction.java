@@ -40,7 +40,7 @@ public class AddFactoidFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return PercivalBot.BOT_COMMAND_PREFIX + "add [trigger] [response]";
+		return "add [trigger] [response]";
 	}
 
 	@Override
