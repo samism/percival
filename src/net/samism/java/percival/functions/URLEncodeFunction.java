@@ -1,14 +1,13 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,16 +16,19 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  * Time: 12:51 PM
  */
 public class URLEncodeFunction extends Function {
+	private static final Logger log = LoggerFactory.getLogger(URLEncodeFunction.class);
+
 	String encoding;
 
 	public URLEncodeFunction(FunctionalMessage message) {
 		super(message);
+		log.debug("got here");
 	}
 
 	@Override
 	public String perform() {
 		try {
-			return URLEncoder.encode(line, encoding);
+			return URLEncoder.encode(line, encoding == null ? "utf-8" : encoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "Could not encode that string with " + encoding;
@@ -35,7 +37,7 @@ public class URLEncodeFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^url-e(ncode)?((us|iso|utf)-(ascii|8859|8|16be|16le|16)(-1)?)? ([^\\r\\n]+)";
+		String regex = "^url-e(ncode)?([^\\r\\n]+)";
 
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(line);
@@ -43,8 +45,21 @@ public class URLEncodeFunction extends Function {
 		boolean match = m.find();
 
 		if (match) {
-			encoding = m.group(2) == null ? "utf-8" : m.group(2); //the encoding
-			line = m.group(6); //the text to encode
+			String s = line.split(" ")[1].toLowerCase(); //if the first word of the text happens to be an encoding
+
+			line = m.group(2).trim(); //the text to encode
+
+			switch (s) {
+				case "us-ascii":
+				case "iso-8859-1":
+				case "utf-16be":
+				case "utf-16le":
+				case "utf-16":
+				case "utf-8":
+					encoding = s;
+					line = line.replaceFirst(encoding + " ", "");
+					break;
+			}
 		}
 
 		return match;

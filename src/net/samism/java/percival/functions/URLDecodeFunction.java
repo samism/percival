@@ -24,7 +24,7 @@ public class URLDecodeFunction extends Function {
 	@Override
 	public String perform() {
 		try {
-			return StringUtils.decodeCompletely(line, encoding);
+			return StringUtils.decodeCompletely(line, encoding == null ? "utf-8" : encoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "Could not decode that string with " + encoding;
@@ -33,7 +33,7 @@ public class URLDecodeFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^url-d(ecode)?((us|iso|utf)-(ascii|8859|8|16be|16le|16)(-1)?)? ([^\\r\\n\\s]+)";
+		String regex = "^url-d(ecode)?([^\\r\\n]+)";
 
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(line);
@@ -41,10 +41,21 @@ public class URLDecodeFunction extends Function {
 		boolean match = m.find();
 
 		if (match) {
+			String s = line.split(" ")[1].toLowerCase(); //if the first word of the text happens to be an encoding
 
-			encoding = m.group(2) == null ? "utf-8" : m.group(2); //the encoding
-			line = m.group(5);//.substring(m.group(6).lastIndexOf(" ")); //buggy solution, but works because encoded text
-			//never has any whitespace
+			line = m.group(2).trim(); //the text to encode
+
+			switch (s) {
+				case "us-ascii":
+				case "iso-8859-1":
+				case "utf-16be":
+				case "utf-16le":
+				case "utf-16":
+				case "utf-8":
+					encoding = s;
+					line = line.replaceFirst(encoding, "").trim();
+					break;
+			}
 		}
 
 		return match;
