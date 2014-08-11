@@ -81,7 +81,16 @@ public final class Factoids {
 		String[] array = s.toArray(new String[s.size()]);
 		StringBuilder sb = new StringBuilder();
 
+		Pattern p = Pattern.compile("([\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|])");
+		Matcher m;
+
 		for (int i = 0; i < array.length; i++) {
+			m = p.matcher(array[i]);
+
+			while (m.find()) {
+				array[i] = m.replaceAll("\\\\$1"); //escape all regex chars
+			}
+
 			if (i == (array.length - 1))
 				sb.append(array[i]);
 			else

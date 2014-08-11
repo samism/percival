@@ -2,7 +2,6 @@ package net.samism.java.percival.functions;
 
 import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +20,7 @@ public class AddFactoidFunction extends Function {
 	@Override
 	public String perform() {
 		String[] args = line.split(" ");
-		String t = args[1]; //trigger
+		String t = args[1];
 		String r = line.substring(StringUtils.nthIndexOf(line, " ", 2)); //response
 
 		message.getFactoidsObject().add(t, r);

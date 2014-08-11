@@ -1,5 +1,6 @@
 package net.samism.java.percival;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +92,9 @@ public class PercivalBot extends IRCBot {
 		}
 
 		private String cleanLine(String rawLine) {
-			return rawLine.substring(nthIndexOf(rawLine, ":", 2) + 1);
+			rawLine = rawLine.substring(nthIndexOf(rawLine, ":", 2) + 1);
+			rawLine = StringEscapeUtils.escapeJava(rawLine);
+			return rawLine;
 		}
 	}
 
