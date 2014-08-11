@@ -11,7 +11,6 @@ package net.samism.java.percival;
  */
 
 public class ServerMessage extends IRCMessage {
-
 	public ServerMessage(String s, PercivalBot pc) {
 		super(s, pc);
 	}
@@ -36,7 +35,7 @@ public class ServerMessage extends IRCMessage {
 		} else if (rawMsg.contains(":You are now identified")) {
 			String join = "";
 
-			for(String channel : pc.getChannels()) //join all channels for this network
+			for (String channel : pc.getChannels()) //join all channels for this network
 				join += "JOIN " + channel + PercivalBot.NL;
 
 			return join;

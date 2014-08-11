@@ -1,7 +1,6 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,28 +9,28 @@ import net.samism.java.percival.PercivalBot;
  * Time: 2:00 AM
  */
 public class GreetFunction extends Function {
-	public GreetFunction(FunctionalMessage message){
+	public GreetFunction(FunctionalMessage message) {
 		super(message);
 	}
 
 	@Override
 	public String perform() {
-		return message.getAuthor() + ", how's it going????";
+		return message.getAuthor() + ", how's it going?";
 	}
 
 	@Override
-	public boolean matches(){
-		return line.startsWith("sup bro");
+	public boolean matches() {
+		return line.matches("hi|hey|hello|sup|yo|heya|howdy");
 	}
 
 	@Override
 	public String getSyntax() {
-		return "sup bro";
+		return "hi|hey|hello|sup|yo|heya|howdy";
 	}
 
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Greet";
 	}
 }

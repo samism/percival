@@ -29,8 +29,8 @@ public class FunctionalMessage extends IRCMessage {
 
 		functionObjects.add(new URLEncodeFunction(this));
 		functionObjects.add(new URLDecodeFunction(this));
-		functionObjects.add(new RemoveFactoidFunction(this));
 		functionObjects.add(new AddFactoidFunction(this));
+		functionObjects.add(new RemoveFactoidFunction(this));
 		functionObjects.add(new TranslateFunction(this));
 		functionObjects.add(new GreetFunction(this));
 		functionObjects.add(new SyntaxFunction(this));
@@ -46,11 +46,6 @@ public class FunctionalMessage extends IRCMessage {
 				if (isFromOwner())
 					Application.exit();
 				response = "Only " + PercivalBot.OWNER + " can halt my execution.";
-				break;
-			case "hi":
-			case "hello":
-			case "sup":
-				response = "Sup, " + author;
 				break;
 			case "date":
 				response = "The date is: " + PercivalBot.getDate("MMM dd yyyy");
