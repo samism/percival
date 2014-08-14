@@ -65,10 +65,10 @@ public class PercivalBot extends IRCBot {
 
 						if (cleanedLine.startsWith(BOT_COMMAND_PREFIX)) {
 							msg = new FunctionalMessage(rawLine, pc, facts);
-							pc.sendChannel(msg.getResponse());
+							sendChannel(msg.getResponse());
 						} else if (trigger != null) {
 							msg = new FactoidMessage(rawLine, trigger, pc, facts);
-							pc.sendChannel(msg.getResponse());
+							sendChannel(msg.getResponse());
 						}
 					} else {
 						msg = new ServerMessage(rawLine, pc);

@@ -48,7 +48,7 @@ public class RemoveFactoidFunction extends Function {
 
 	@Override
 	public String getSyntax() {
-		return "remove [trigger]";
+		return "remove [trigger 1] [trigger 2] ...";
 	}
 
 	@Override

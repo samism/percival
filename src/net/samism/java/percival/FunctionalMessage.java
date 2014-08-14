@@ -27,6 +27,7 @@ public class FunctionalMessage extends IRCMessage {
 		this.function = msg.substring(msg.indexOf(PercivalBot.BOT_COMMAND_PREFIX) + 2).trim();
 		this.facts = facts;
 
+		functionObjects.add(new ISOCodesFunction(this));
 		functionObjects.add(new URLEncodeFunction(this));
 		functionObjects.add(new URLDecodeFunction(this));
 		functionObjects.add(new AddFactoidFunction(this));

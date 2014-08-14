@@ -41,7 +41,11 @@ public class TranslateFunction extends Function {
 			String translation = (String) object.getJSONObject("responseData").get("translatedText");
 
 			if (translation.contains("IS AN INVALID TARGET LANGUAGE"))
-				return "Invalid target language. Please provide a valid 2 character ISO country code.";
+				return "Invalid target language. Please provide a valid alpha-2 ISO country code: " +
+						new ISOCodesFunction(message).perform();
+			if(translation.contains("IS AN INVALID SOURCE LANGUAGE"))
+				return "Invalid source language. Please provide a valid alpha-2 ISO country code: " +
+						new ISOCodesFunction(message).perform();
 			if (translation.contains("PLEASE SELECT TWO DISTINCT LANGUAGES"))
 				return "Please select two distinct languages.";
 

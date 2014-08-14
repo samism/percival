@@ -47,6 +47,8 @@ public final class Factoids {
 		Pattern req = Pattern.compile(regex);
 		Matcher match = req.matcher(line);
 
+		log.info(Boolean.toString(req.matcher("hello i am Mu").matches()));
+
 		return match.find() ? match.group() : null;
 	}
 

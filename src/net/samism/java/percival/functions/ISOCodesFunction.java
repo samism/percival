@@ -1,36 +1,36 @@
 package net.samism.java.percival.functions;
 
+import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
 
 /**
  * Created with IntelliJ IDEA.
  * User: samism
- * Date: 8/9/14
- * Time: 2:00 AM
+ * Date: 8/13/14
+ * Time: 9:49 PM
  */
-public class GreetFunction extends Function {
-	public GreetFunction(FunctionalMessage message) {
+public class ISOCodesFunction extends Function {
+	public ISOCodesFunction(FunctionalMessage message){
 		super(message);
 	}
 
 	@Override
 	public String perform() {
-		return message.getAuthor() + ", how's it going?";
+		return "http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes";
 	}
 
 	@Override
 	public boolean matches() {
-		return line.matches("(hi|hey|hello|sup|yo|heya|howdy)[^\\r\\n]?");
+		return line.matches("iso|country-codes");
 	}
 
 	@Override
 	public String getSyntax() {
-		return "hi|hey|hello|sup|yo|heya|howdy";
+		return "iso|country-codes";
 	}
-
 
 	@Override
 	public String toString() {
-		return "Greet";
+		return "ISO-Codes";
 	}
 }
