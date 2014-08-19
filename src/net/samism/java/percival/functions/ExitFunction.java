@@ -11,7 +11,7 @@ import net.samism.java.percival.PercivalBot;
  * Time: 2:04 AM
  */
 public class ExitFunction extends Function {
-	public ExitFunction(FunctionalMessage message){
+	public ExitFunction(FunctionalMessage message) {
 		super(message);
 	}
 

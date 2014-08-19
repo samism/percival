@@ -1,7 +1,6 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,7 +12,7 @@ import java.util.Calendar;
  * Time: 2:14 AM
  */
 public class DateFunction extends Function {
-	public DateFunction(FunctionalMessage message){
+	public DateFunction(FunctionalMessage message) {
 		super(message);
 	}
 

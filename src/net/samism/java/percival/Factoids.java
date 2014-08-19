@@ -7,10 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,18 +41,18 @@ public final class Factoids {
 		Pattern req = Pattern.compile(regex);
 		Matcher match = req.matcher(line);
 
-		if(match.find()) {
+		if (match.find()) {
 			//only match if:
 			//1. the entire string was the trigger
-			if(match.group().length() == line.length()){
+			if (match.group().length() == line.length()) {
 				return match.group();
 			}
 
 			//2. If there was a whitespace character after the word (indicating that it was a standalone word)
 			//3. If there was some other character after the word that was not a letter or number (punctuation)
-			if(match.end() < line.length()){ //prevent iobe
-				if((Character.isWhitespace(line.charAt(match.end())) ||
-						!Character.isLetterOrDigit(line.charAt(match.end())))){
+			if (match.end() < line.length()) { //prevent iobe
+				if ((Character.isWhitespace(line.charAt(match.end())) ||
+						!Character.isLetterOrDigit(line.charAt(match.end())))) {
 					return match.group();
 				}
 			}

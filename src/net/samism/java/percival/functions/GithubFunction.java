@@ -9,7 +9,7 @@ import net.samism.java.percival.FunctionalMessage;
  * Time: 2:27 AM
  */
 public class GithubFunction extends Function {
-	public GithubFunction(FunctionalMessage message){
+	public GithubFunction(FunctionalMessage message) {
 		super(message);
 	}
 
