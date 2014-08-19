@@ -5,31 +5,31 @@ import net.samism.java.percival.FunctionalMessage;
 /**
  * Created with IntelliJ IDEA.
  * User: samism
- * Date: 8/9/14
- * Time: 2:00 AM
+ * Date: 8/19/14
+ * Time: 2:27 AM
  */
-public class GreetFunction extends Function {
-	public GreetFunction(FunctionalMessage message) {
+public class GithubFunction extends Function {
+	public GithubFunction(FunctionalMessage message){
 		super(message);
 	}
 
 	@Override
 	public String perform() {
-		return message.getAuthor() + ", how's it going?";
+		return "My source code is at: https://github.com/samism/percival";
 	}
 
 	@Override
 	public boolean matches() {
-		return line.matches("^(hi|hey|hello|sup|yo|heya|howdy)[^\\r\\n\\w\\d\\s]?$");
+		return line.matches("^(you|source)$");
 	}
 
 	@Override
 	public String getSyntax() {
-		return "hi|hey|hello|sup|yo|heya|howdy";
+		return "you|source";
 	}
 
 	@Override
 	public String toString() {
-		return "Greet";
+		return "Get Github Page";
 	}
 }

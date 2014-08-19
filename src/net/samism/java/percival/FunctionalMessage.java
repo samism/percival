@@ -18,15 +18,18 @@ public class FunctionalMessage extends IRCMessage {
 	private static final Logger log = LoggerFactory.getLogger(FunctionalMessage.class);
 
 	private final Factoids facts;
-	private final String function;
 
 	public final List<Function> functionObjects = new ArrayList<>();
 
 	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
 		super(s, pc);
-		this.function = msg.substring(msg.indexOf(PercivalBot.BOT_COMMAND_PREFIX) + 2).trim();
 		this.facts = facts;
 
+		functionObjects.add(new FactoidsFunction(this));
+		functionObjects.add(new GithubFunction(this));
+		functionObjects.add(new OwnerFunction(this));
+		functionObjects.add(new DateFunction(this));
+		functionObjects.add(new ExitFunction(this));
 		functionObjects.add(new ISOCodesFunction(this));
 		functionObjects.add(new URLEncodeFunction(this));
 		functionObjects.add(new URLDecodeFunction(this));
@@ -41,39 +44,11 @@ public class FunctionalMessage extends IRCMessage {
 	public String getResponse() {
 		String response = "Sorry, what?";
 
-		switch (function) {
-			//for commands that do not need an entire class
-			case "exit":
-				if (isFromOwner())
-					Application.exit();
-				response = "Only " + PercivalBot.OWNER + " can halt my execution.";
-				break;
-			case "date":
-				response = "The date is: " + PercivalBot.getDate("MMM dd yyyy");
-				break;
-			case "owner":
-				response = PercivalBot.OWNER;
-				break;
-			case "you":
-			case "source":
-				response = "My source code is at: https://github.com/samism/percival";
-				break;
-			case "factoids": {
-				Set<String> s = facts.getTriggers();
-
-				response = "Here are my factoids (" + s.size() + ") : ";
-				response += s.toString();
-
-				break;
-			}
-			default: {
-				//traverse all subclasses of Function to find one that is a match.
-				//upon finding a match, return the result of it's perform() method
-				for (Function f : functionObjects) {
-					if (f.matches())
-						response = f.perform();
-				}
-			}
+		//traverse all subclasses of Function to find one that is a match.
+		//upon finding a match, return the result of it's perform() method
+		for (Function f : functionObjects) {
+			if (f.matches())
+				response = f.perform();
 		}
 
 		return response;

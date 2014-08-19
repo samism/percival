@@ -28,7 +28,7 @@ public class IRCBot implements IRCFunctions {
 	public static final String BOT_COMMAND_PREFIX = "p.";
 
 	private static final File LOGS_DIR = new File("logs"); // logs directory
-	private static final File LOG_FILE = new File(getDate("M.d.yy") + ".log"); // file
+	private static final File LOG_FILE = new File("log"); // file
 
 	private static final FileWriter fw = null;
 
@@ -113,8 +113,7 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void logConsole(String line) {
-		String date = getDate("H:mm:ss:SSS");
-		log.info("[" + date + "]" + line);
+		log.info(line);
 	}
 
 	@Override
@@ -141,11 +140,6 @@ public class IRCBot implements IRCFunctions {
 		}
 
 		return isEmpty;
-	}
-
-	public static String getDate(String format) {
-		return new SimpleDateFormat(format).
-				format(Calendar.getInstance().getTime());
 	}
 
 	public void setCurrentChannelName(String channelName) {
