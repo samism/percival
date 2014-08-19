@@ -67,7 +67,7 @@ public class FunctionalMessage extends IRCMessage {
 				break;
 			}
 			default: {
-				//traverse all subclasses of Function to find one that is compatible.
+				//traverse all subclasses of Function to find one that is a match.
 				//upon finding a match, return the result of it's perform() method
 				for (Function f : functionObjects) {
 					if (f.matches())

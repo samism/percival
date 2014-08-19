@@ -29,8 +29,8 @@ public class FactoidMessage extends IRCMessage {
 		try {
 			return facts.getFactoid(trigger);
 		} catch (JSONException e) {
-			log.info("Problem finding the JSON entry for: " + trigger);
-			return "Problem finding the JSON entry for: " + trigger;
+			log.info("Problem finding the JSON entry for: '" + trigger + "'");
+			return "Problem finding the JSON entry for: '" + trigger + "'";
 		}
 	}
 

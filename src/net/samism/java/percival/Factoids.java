@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 public final class Factoids {
 	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
 	private static final String PATH_TO_JSON = "misc/factoids.json";
-			//"/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/factoids.json";
 
 	private final JSONObject facts;
 	private final Set<String> triggers;
@@ -39,14 +38,31 @@ public final class Factoids {
 	}
 
 	public final String containsTrigger(String line) {
-		line = line.toLowerCase();
+		line = line.toLowerCase().trim();
 
 		String regex = jsonToRegexString(triggers); //returns "xxx|xxx|xx|"
 
 		Pattern req = Pattern.compile(regex);
 		Matcher match = req.matcher(line);
 
-		return match.find() ? match.group() : null;
+		if(match.find()) {
+			//only match if:
+			//1. the entire string was the trigger
+			if(match.group().length() == line.length()){
+				return match.group();
+			}
+
+			//2. If there was a whitespace character after the word (indicating that it was a standalone word)
+			//3. If there was some other character after the word that was not a letter or number (punctuation)
+			if(match.end() < line.length()){ //prevent iobe
+				if((Character.isWhitespace(line.charAt(match.end())) ||
+						!Character.isLetterOrDigit(line.charAt(match.end())))){
+					return match.group();
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public final String getFactoid(String command) throws JSONException {
@@ -69,7 +85,7 @@ public final class Factoids {
 			StringBuilder sb = new StringBuilder();
 			String line;
 
-			while((line = br.readLine()) != null){
+			while ((line = br.readLine()) != null) {
 				sb.append(line);
 			}
 
@@ -83,10 +99,10 @@ public final class Factoids {
 	//convert a Set of strings to a single regex String delimited with |
 	private String jsonToRegexString(Set<String> s) {
 		String[] array = s.toArray(new String[s.size()]);
-		StringBuilder sb = new StringBuilder();
-
 		Pattern p = Pattern.compile("([\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|])");
 		Matcher m;
+
+		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < array.length; i++) {
 			m = p.matcher(array[i]);
@@ -95,14 +111,12 @@ public final class Factoids {
 				array[i] = m.replaceAll("\\\\$1"); //escape all regex chars
 			}
 
-			sb.append("\\s?(");
 			if (i == (array.length - 1))
 				sb.append(array[i]);
 			else
 				sb.append(array[i]).append("|");
 		}
 
-		sb.append(")\\s");
 		return sb.toString();
 	}
 
