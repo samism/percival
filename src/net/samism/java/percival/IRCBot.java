@@ -23,8 +23,7 @@ public class IRCBot implements IRCFunctions {
 
 	public static final String OWNER = "ffs82defxp";
 	public static final String NL = "\r\n";
-	public static final String CONFIG_FILE_PATH = "/Users/samism/Dropbox/programming/java/" +
-			"projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/percy.config";
+	public static final String CONFIG_FILE_PATH = "misc/percy.config";
 	public static final String BOT_NAME = "Percival";
 	public static final String BOT_COMMAND_PREFIX = "p.";
 

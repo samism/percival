@@ -6,8 +6,7 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,8 +27,8 @@ import java.util.regex.Pattern;
  */
 public final class Factoids {
 	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
-	private static final String PATH_TO_JSON = "/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)" +
-			"/src/net/samism/java/percival/misc/factoids.json";
+	private static final String PATH_TO_JSON = "misc/factoids.json";
+			//"/Users/samism/Dropbox/programming/java/projects/IRC Bot (Percival)/src/net/samism/java/percival/misc/factoids.json";
 
 	private final JSONObject facts;
 	private final Set<String> triggers;
@@ -47,8 +46,6 @@ public final class Factoids {
 		Pattern req = Pattern.compile(regex);
 		Matcher match = req.matcher(line);
 
-		log.info(Boolean.toString(req.matcher("hello i am Mu").matches()));
-
 		return match.find() ? match.group() : null;
 	}
 
@@ -65,11 +62,16 @@ public final class Factoids {
 
 	private String loadFile(String path) {
 		try {
-			StringBuilder sb = new StringBuilder();
-			List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+			InputStream is = getClass().getResourceAsStream(path);
+			InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+			BufferedReader br = new BufferedReader(ir);
 
-			for (String s : lines)
-				sb.append(s);
+			StringBuilder sb = new StringBuilder();
+			String line;
+
+			while((line = br.readLine()) != null){
+				sb.append(line);
+			}
 
 			return sb.toString();
 		} catch (IOException e) {
@@ -93,12 +95,14 @@ public final class Factoids {
 				array[i] = m.replaceAll("\\\\$1"); //escape all regex chars
 			}
 
+			sb.append("\\s?(");
 			if (i == (array.length - 1))
 				sb.append(array[i]);
 			else
 				sb.append(array[i]).append("|");
 		}
 
+		sb.append(")\\s");
 		return sb.toString();
 	}
 

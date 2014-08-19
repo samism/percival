@@ -4,7 +4,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -103,7 +106,18 @@ public class PercivalBot extends IRCBot {
 	}
 
 	private String loadIdentPass() throws IOException {
-		return Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
+		//return Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
+		InputStream is = getClass().getResourceAsStream(CONFIG_FILE_PATH);
+		InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+		BufferedReader br = new BufferedReader(ir);
+
+		String line;
+
+		if((line = br.readLine()) != null){
+			return line;
+		}
+
+		return "";
 	}
 
 	public Thread getConnection() {
