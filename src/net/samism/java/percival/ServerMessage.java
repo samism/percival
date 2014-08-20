@@ -35,8 +35,11 @@ public class ServerMessage extends IRCMessage {
 		} else if (rawMsg.contains(":You are now identified")) {
 			String join = "";
 
-			for (String channel : pc.getChannels()) //join all channels for this network
-				join += "JOIN " + channel + PercivalBot.NL;
+			for (String channel : pc.getChannels()) { //join all channels for this network
+				join += "JOIN " + channel;
+				if(pc.getChannels().size() > 1)
+					join += PercivalBot.NL;
+			}
 
 			return join;
 		}

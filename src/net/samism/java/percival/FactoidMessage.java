@@ -20,8 +20,6 @@ public class FactoidMessage extends IRCMessage {
 		super(s, pc);
 		this.facts = facts;
 		this.trigger = trigger;
-
-		log.info(trigger);
 	}
 
 	@Override
