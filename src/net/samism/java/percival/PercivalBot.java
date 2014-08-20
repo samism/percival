@@ -1,13 +1,11 @@
 package net.samism.java.percival;
 
+import net.samism.java.percival.exception.IdentPasswordException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 
@@ -18,18 +16,25 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  * Date: 7/29/2014
  * Time: 4:03 AM
  */
-public class PercivalBot extends IRCBot {
+public final class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
-
-	private final String identPass = loadIdentPass(); //needed to protect the identify password
 
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
-	public final Factoids facts = new Factoids();
+	private final Factoids facts = new Factoids();
+
+	private String identPass;
 
 	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
 		super(BOT_NAME, serverName, channels, port);
+
+		try {
+			identPass = loadIdentPass(); //needed to protect the identify password
+		} catch (IdentPasswordException e) {
+			e.printStackTrace();
+			identPass = "";
+		}
 
 		connect(this);
 		connection.start();
@@ -99,25 +104,26 @@ public class PercivalBot extends IRCBot {
 	}
 
 	public String getIdentPass() {
-		return identPass;
+		return this.identPass;
 	}
 
-	private String loadIdentPass() throws IOException {
-		//return Files.readAllLines(Paths.get(CONFIG_FILE_PATH), StandardCharsets.UTF_8).get(0);
-		InputStream is = getClass().getResourceAsStream(CONFIG_FILE_PATH);
-		InputStreamReader ir = new InputStreamReader(is, "UTF-8");
-		BufferedReader br = new BufferedReader(ir);
+	private String loadIdentPass() throws IdentPasswordException {
+		try (InputStream is = getClass().getResourceAsStream(CONFIG_FILE_PATH);
+			 InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+			 BufferedReader br = new BufferedReader(ir)) {
+			String line;
 
-		String line;
-
-		if ((line = br.readLine()) != null) {
-			return line;
+			if ((line = br.readLine()) != null) {
+				return line;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		return "";
+		throw new IdentPasswordException("Couldn't load ident pass...");
 	}
 
 	public Thread getConnection() {
-		return connection;
+		return this.connection;
 	}
 }
