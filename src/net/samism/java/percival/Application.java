@@ -36,9 +36,7 @@ public final class Application {
 	}
 
 	public static void exit() {
-		for (PercivalBot bot : botInstances) {
-			destroyBot(bot);
-		}
+		botInstances.forEach(Application::destroyBot);
 
 		System.exit(0);
 	}
@@ -46,14 +44,9 @@ public final class Application {
 	public static void destroyBot(PercivalBot bot) {
 		try {
 			bot.leaveAllChannels();
-			bot.getConnection().join();
-			botInstances.remove(bot);
+			bot.setShouldDie(true);
 		} catch (IOException e) {
 			log.error("Couldn't leave all channels for the bot connected to: " + bot.getServerName());
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			bot.getConnection().interrupt();
-			log.error("Interrupting thread: " + bot.getConnection().getId());
 			e.printStackTrace();
 		}
 	}

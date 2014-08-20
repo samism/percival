@@ -24,6 +24,7 @@ public final class PercivalBot extends IRCBot {
 
 	private final Factoids facts = new Factoids();
 
+	private boolean shouldDie = false;
 	private String identPass;
 
 	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
@@ -54,7 +55,7 @@ public final class PercivalBot extends IRCBot {
 
 				String rawLine;
 
-				while ((rawLine = pc.getBr().readLine()) != null) { //if its null, thread dies
+				while ((rawLine = pc.getBr().readLine()) != null && !shouldDie) { //if its null, thread dies
 					logConsole(">>>" + rawLine); //logs to the console immediately
 
 					IRCMessage msg;
@@ -121,6 +122,10 @@ public final class PercivalBot extends IRCBot {
 		}
 
 		throw new IdentPasswordException("Couldn't load ident pass...");
+	}
+
+	public void setShouldDie(boolean shouldIt){
+		this.shouldDie = shouldIt;
 	}
 
 	public Thread getConnection() {
