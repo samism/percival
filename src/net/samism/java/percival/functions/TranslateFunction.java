@@ -1,7 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
+import net.samism.java.percival.IRCRegex;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -20,7 +20,7 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
  * Time: 1:40 AM
  */
 public class TranslateFunction extends Function {
-	public TranslateFunction(FunctionalMessage message){
+	public TranslateFunction(FunctionalMessage message) {
 		super(message);
 	}
 
@@ -43,7 +43,7 @@ public class TranslateFunction extends Function {
 			if (translation.contains("IS AN INVALID TARGET LANGUAGE"))
 				return "Invalid target language. Please provide a valid alpha-2 ISO country code: " +
 						new ISOCodesFunction(message).perform();
-			if(translation.contains("IS AN INVALID SOURCE LANGUAGE"))
+			if (translation.contains("IS AN INVALID SOURCE LANGUAGE"))
 				return "Invalid source language. Please provide a valid alpha-2 ISO country code: " +
 						new ISOCodesFunction(message).perform();
 			if (translation.contains("PLEASE SELECT TWO DISTINCT LANGUAGES"))
@@ -59,10 +59,10 @@ public class TranslateFunction extends Function {
 	}
 
 	@Override
-	public boolean matches(){
-		String regex = "^trans(late)? ([a-z]{2}->[a-z]{2}).+";
+	public boolean matches() {
+		IRCRegex regex = new IRCRegex("trans(late)? ([a-z]{2}->[a-z]{2}).+");
 
-		Pattern p = Pattern.compile(regex);
+		Pattern p = Pattern.compile(regex.toString());
 		Matcher m = p.matcher(line);
 
 		return m.find();
@@ -74,7 +74,7 @@ public class TranslateFunction extends Function {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Translate";
 	}
 }

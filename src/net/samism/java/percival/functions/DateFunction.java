@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,7 +24,9 @@ public class DateFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("^date$|what day is it|day");
+		IRCRegex regex = new IRCRegex("date|what day is it|day");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override

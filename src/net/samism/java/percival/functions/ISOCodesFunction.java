@@ -1,7 +1,7 @@
 package net.samism.java.percival.functions;
 
-import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +10,7 @@ import net.samism.java.percival.FunctionalMessage;
  * Time: 9:49 PM
  */
 public class ISOCodesFunction extends Function {
-	public ISOCodesFunction(FunctionalMessage message){
+	public ISOCodesFunction(FunctionalMessage message) {
 		super(message);
 	}
 
@@ -21,7 +21,9 @@ public class ISOCodesFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("iso|country-codes");
+		IRCRegex regex = new IRCRegex("iso|country-codes");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package net.samism.java.percival.functions;
 
 import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,9 +30,9 @@ public class AddFactoidFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^add [^\\r\\n]+ [^\\r\\n]+";
+		IRCRegex regex = new IRCRegex("add [^\\r\\n]+ [^\\r\\n]+");
 
-		Pattern p = Pattern.compile(regex);
+		Pattern p = Pattern.compile(regex.toString());
 		Matcher m = p.matcher(line);
 
 		return m.find();

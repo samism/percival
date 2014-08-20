@@ -3,9 +3,6 @@ package net.samism.java.percival.functions;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.PercivalBot;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created with IntelliJ IDEA.
  * User: samism

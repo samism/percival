@@ -1,7 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
+import net.samism.java.percival.IRCRegex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,9 +38,9 @@ public class RemoveFactoidFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^remove [^\\r\\n]+";
+		IRCRegex regex = new IRCRegex("remove [^\\r\\n]+");
 
-		Pattern p = Pattern.compile(regex);
+		Pattern p = Pattern.compile(regex.toString());
 		Matcher m = p.matcher(line);
 
 		return m.find();

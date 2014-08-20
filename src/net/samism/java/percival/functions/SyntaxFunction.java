@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 import net.samism.java.percival.PercivalBot;
 
 import java.util.LinkedHashMap;
@@ -30,9 +31,9 @@ public class SyntaxFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^\\?$";
+		IRCRegex regex = new IRCRegex("\\?");
 
-		Pattern p = Pattern.compile(regex);
+		Pattern p = Pattern.compile(regex.toString());
 		Matcher m = p.matcher(line);
 
 		return m.find();

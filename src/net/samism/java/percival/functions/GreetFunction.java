@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +21,9 @@ public class GreetFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("^(hi|hey|hello|sup|yo|heya|howdy)[^\\r\\n\\w\\d\\s]?$");
+		IRCRegex regex = new IRCRegex("(hi|hey|hello|sup|yo|heya|howdy)[^\\r\\n\\w\\d\\s]?");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override

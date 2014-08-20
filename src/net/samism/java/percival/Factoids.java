@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,13 +25,21 @@ import java.util.regex.Pattern;
 public final class Factoids {
 	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
 	private static final String PATH_TO_JSON = "misc/factoids.json";
+	private File FACTOIDS_JSON_FILE;
 
-	private final JSONObject facts;
-	private final Set<String> triggers;
+	private final JSONObject facts = loadJSON(PATH_TO_JSON);
+	private final Set<String> triggers = facts.keySet();
 
 	public Factoids() {
-		this.facts = loadJSON(PATH_TO_JSON);
-		this.triggers = facts.keySet();
+		try {
+			FACTOIDS_JSON_FILE = new File(getClass().getResource(PATH_TO_JSON).toURI());
+		} catch (URISyntaxException e) {
+			log.error("Relative path to factoid JSON file has a syntax error: " + FACTOIDS_JSON_FILE.toString());
+			e.printStackTrace();
+			String path = System.getProperty("user.dir") + "out/net/samism/java/percvial/" + PATH_TO_JSON;
+			FACTOIDS_JSON_FILE = new File(path);
+			log.error("Resorting to absolute path: " + path);
+		}
 	}
 
 	public final String containsTrigger(String line) {
@@ -119,18 +128,20 @@ public final class Factoids {
 	public final void add(String t, String r) {
 		try {
 			facts.put(t, r); //add pair to JSON object
-			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
+			facts.write(new PrintWriter(FACTOIDS_JSON_FILE, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
-			log.error("Problem writing JSON to file");
+			log.error("Problem writing JSON to file.");
+			log.error("JSON file attempted at path: " + FACTOIDS_JSON_FILE.toString());
 		}
 	}
 
 	public final void remove(String t) {
 		try {
 			facts.remove(t); //remove pair from JSON object
-			facts.write(new PrintWriter(PATH_TO_JSON, "UTF-8")).close(); //modify the file
+			facts.write(new PrintWriter(FACTOIDS_JSON_FILE, "UTF-8")).close(); //modify the file
 		} catch (IOException e) {
-			log.error("Problem writing JSON to file");
+			log.error("Problem writing JSON to file.");
+			log.error("JSON file attempted at path: " + FACTOIDS_JSON_FILE.toString());
 		}
 	}
 

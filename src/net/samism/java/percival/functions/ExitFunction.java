@@ -2,6 +2,7 @@ package net.samism.java.percival.functions;
 
 import net.samism.java.percival.Application;
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 import net.samism.java.percival.PercivalBot;
 
 /**
@@ -24,7 +25,9 @@ public class ExitFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("^exit$");
+		IRCRegex regex = new IRCRegex("exit");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override

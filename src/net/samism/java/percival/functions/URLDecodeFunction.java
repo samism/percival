@@ -2,7 +2,7 @@ package net.samism.java.percival.functions;
 
 import net.samism.java.StringUtils.StringUtils;
 import net.samism.java.percival.FunctionalMessage;
-import net.samism.java.percival.PercivalBot;
+import net.samism.java.percival.IRCRegex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +37,9 @@ public class URLDecodeFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		String regex = "^url-d(ecode)?([^\\r\\n]+)";
+		IRCRegex regex = new IRCRegex("url-d(ecode)?([^\\r\\n]+)");
 
-		Pattern p = Pattern.compile(regex);
+		Pattern p = Pattern.compile(regex.toString());
 		Matcher m = p.matcher(line);
 
 		boolean match = m.find();

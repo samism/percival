@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +21,9 @@ public class GithubFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("^(you|source)$");
+		IRCRegex regex = new IRCRegex("you|source");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override

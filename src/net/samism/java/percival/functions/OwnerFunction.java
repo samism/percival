@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 import net.samism.java.percival.PercivalBot;
 
 /**
@@ -10,7 +11,7 @@ import net.samism.java.percival.PercivalBot;
  * Time: 2:21 AM
  */
 public class OwnerFunction extends Function {
-	public OwnerFunction(FunctionalMessage message){
+	public OwnerFunction(FunctionalMessage message) {
 		super(message);
 	}
 
@@ -21,7 +22,8 @@ public class OwnerFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("owner");
+		IRCRegex regex = new IRCRegex("owner");
+		return line.matches(regex.toString());
 	}
 
 	@Override

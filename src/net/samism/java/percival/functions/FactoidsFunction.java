@@ -1,6 +1,7 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.percival.FunctionalMessage;
+import net.samism.java.percival.IRCRegex;
 
 import java.util.Set;
 
@@ -24,7 +25,9 @@ public class FactoidsFunction extends Function {
 
 	@Override
 	public boolean matches() {
-		return line.matches("^fact(oids?)?$");
+		IRCRegex regex = new IRCRegex("fact(oids?)?");
+
+		return line.matches(regex.toString());
 	}
 
 	@Override
