@@ -130,8 +130,7 @@ public class IRCBot implements IRCFunctions {
 
 	private boolean isFileEmpty() {
 		boolean isEmpty = false;
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(LOG_FILE.getPath()));
+		try (BufferedReader br = new BufferedReader(new FileReader(LOG_FILE.getPath()))) {
 			isEmpty = br.readLine() == null;
 		} catch (IOException e) {
 			e.printStackTrace();

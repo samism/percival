@@ -82,15 +82,13 @@ public final class Factoids {
 	}
 
 	private String loadFile(String path) {
-		try {
-			InputStream is = getClass().getResourceAsStream(path);
-			InputStreamReader ir = new InputStreamReader(is, "UTF-8");
-			BufferedReader br = new BufferedReader(ir);
+		try (InputStream is = getClass().getResourceAsStream(path);
+			 InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+			 BufferedReader br = new BufferedReader(ir)) {
 
 			StringBuilder sb = new StringBuilder();
-			String line;
 
-			while ((line = br.readLine()) != null) {
+			for (String line = br.readLine(); line != null; line = br.readLine()) {
 				sb.append(line);
 			}
 
