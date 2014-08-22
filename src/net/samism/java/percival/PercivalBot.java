@@ -45,7 +45,7 @@ public final class PercivalBot extends IRCBot {
 		public void run() {
 			try {
 				send("NICK " + BOT_NAME);
-				send("USER " + BOT_NAME + " 0 * :" + getBotName());
+				send("USER " + BOT_NAME + " 0 * :" + BOT_NAME);
 
 				String rawLine;
 
