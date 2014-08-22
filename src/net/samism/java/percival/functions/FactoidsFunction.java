@@ -3,7 +3,7 @@ package net.samism.java.percival.functions;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.IRCRegex;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +18,7 @@ public class FactoidsFunction extends Function {
 
 	@Override
 	public String perform() {
-		Set<String> s = message.getFactoidsObject().getTriggers();
+		ArrayList<String> s = message.getFactoidsObject().getTriggers();
 
 		return "Here are my factoids (" + s.size() + ") : " + s.toString();
 	}
@@ -37,6 +37,6 @@ public class FactoidsFunction extends Function {
 
 	@Override
 	public String toString() {
-		return "List Factoids";
+		return "List FactoidsJSON";
 	}
 }

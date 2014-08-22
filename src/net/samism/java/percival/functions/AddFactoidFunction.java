@@ -1,8 +1,10 @@
 package net.samism.java.percival.functions;
 
 import net.samism.java.StringUtils.StringUtils;
+import net.samism.java.percival.Factoid;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.IRCRegex;
+import net.samism.java.percival.util.Date;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,17 +16,24 @@ import java.util.regex.Pattern;
  * Time: 12:40 PM
  */
 public class AddFactoidFunction extends Function {
-	public AddFactoidFunction(FunctionalMessage message) {
+	private String author;
+
+	public AddFactoidFunction(FunctionalMessage message, String author) {
 		super(message);
+		this.author = author;
 	}
 
 	@Override
 	public String perform() {
 		String[] args = line.split(" ");
+
 		String t = args[1];
 		String r = line.substring(StringUtils.nthIndexOf(line, " ", 2)); //response
 
-		message.getFactoidsObject().add(t, r);
+		Factoid f = new Factoid(this.author, t, r, Date.today());
+
+		message.getFactoidsObject().insert(f);
+
 		return message.getAuthor() + ", I learned that.";
 	}
 

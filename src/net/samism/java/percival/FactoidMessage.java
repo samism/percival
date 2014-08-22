@@ -1,6 +1,5 @@
 package net.samism.java.percival;
 
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +12,10 @@ import org.slf4j.LoggerFactory;
 
 public class FactoidMessage extends IRCMessage {
 	private static final Logger log = LoggerFactory.getLogger(FactoidMessage.class);
-	private Factoids facts;
+	private FactoidsJDBC facts;
 	private String trigger;
 
-	public FactoidMessage(String s, String trigger, PercivalBot pc, Factoids facts) {
+	public FactoidMessage(String s, String trigger, PercivalBot pc, FactoidsJDBC facts) {
 		super(s, pc);
 		this.facts = facts;
 		this.trigger = trigger;
@@ -24,12 +23,7 @@ public class FactoidMessage extends IRCMessage {
 
 	@Override
 	public String getResponse() {
-		try {
-			return facts.getFactoid(trigger);
-		} catch (JSONException e) {
-			log.info("Problem finding the JSON entry for: '" + trigger + "'");
-			return "Problem finding the JSON entry for: '" + trigger + "'";
-		}
+		return facts.select(trigger).getResponse();
 	}
 
 	@Override

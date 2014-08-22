@@ -1,13 +1,13 @@
 package net.samism.java.percival;
 
-import net.samism.java.percival.exception.IdentPasswordException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
 
 import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
+import static net.samism.java.percival.util.File.loadText;
 
 
 /**
@@ -22,20 +22,14 @@ public final class PercivalBot extends IRCBot {
 	private final Connection c = new PercivalBot.Connection(this);
 	private final Thread connection = new Thread(c);
 
-	private final Factoids facts = new Factoids();
+	//private final FactoidsJSON facts = new FactoidsJSON();
+	private final FactoidsJDBC facts = new FactoidsJDBC();
 
 	private boolean shouldDie = false;
-	private String identPass;
+	private String identPass = loadText(getClass(), CONFIG_FILE_PATH).split(" ")[0];
 
 	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
 		super(BOT_NAME, serverName, channels, port);
-
-		try {
-			identPass = loadIdentPass(); //needed to protect the identify password
-		} catch (IdentPasswordException e) {
-			e.printStackTrace();
-			identPass = "";
-		}
 
 		connect(this);
 		connection.start();
@@ -108,23 +102,7 @@ public final class PercivalBot extends IRCBot {
 		return this.identPass;
 	}
 
-	private String loadIdentPass() throws IdentPasswordException {
-		try (InputStream is = getClass().getResourceAsStream(CONFIG_FILE_PATH);
-			 InputStreamReader ir = new InputStreamReader(is, "UTF-8");
-			 BufferedReader br = new BufferedReader(ir)) {
-			String line;
-
-			if ((line = br.readLine()) != null) {
-				return line;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		throw new IdentPasswordException("Couldn't load ident pass...");
-	}
-
-	public void setShouldDie(boolean shouldIt){
+	public void setShouldDie(boolean shouldIt) {
 		this.shouldDie = shouldIt;
 	}
 

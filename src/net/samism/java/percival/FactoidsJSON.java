@@ -6,31 +6,36 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static net.samism.java.percival.util.File.loadText;
 
 /**
  * Created with IntelliJ IDEA.
  * User: samism
  * Date: 7/25/14
  * Time: 12:39 AM
- * <p/>
+ *
+ * @deprecated <p/>
  * This file handles everything having to do with triggers.
  * <p/>
  * It loads (later will be able to append) triggers from a JSON file - facts.json.
  */
-public final class Factoids {
-	private static final Logger log = LoggerFactory.getLogger(Factoids.class);
+public final class FactoidsJSON {
+	private static final Logger log = LoggerFactory.getLogger(FactoidsJSON.class);
 	private static final String PATH_TO_JSON = "misc/factoids.json";
 	private File FACTOIDS_JSON_FILE;
 
 	private final JSONObject facts = loadJSON(PATH_TO_JSON);
 	private final Set<String> triggers = facts.keySet();
 
-	public Factoids() {
+	public FactoidsJSON() {
 		try {
 			FACTOIDS_JSON_FILE = new File(getClass().getResource(PATH_TO_JSON).toURI());
 		} catch (URISyntaxException e) {
@@ -75,28 +80,10 @@ public final class Factoids {
 	}
 
 	private JSONObject loadJSON(String file) {
-		String jsonString = loadFile(file);
+		String jsonString = loadText(getClass(), file);
 
 		JSONTokener tokener = new JSONTokener(jsonString);
 		return new JSONObject(tokener);
-	}
-
-	private String loadFile(String path) {
-		try (InputStream is = getClass().getResourceAsStream(path);
-			 InputStreamReader ir = new InputStreamReader(is, "UTF-8");
-			 BufferedReader br = new BufferedReader(ir)) {
-
-			StringBuilder sb = new StringBuilder();
-
-			for (String line = br.readLine(); line != null; line = br.readLine()) {
-				sb.append(line);
-			}
-
-			return sb.toString();
-		} catch (IOException e) {
-			log.error("Error loading factoid file.");
-			return "";
-		}
 	}
 
 	//convert a Set of strings to a single regex String delimited with |

@@ -27,7 +27,7 @@ public class RemoveFactoidFunction extends Function {
 		int num = args.size(); //initial number of factoids requested to be removed
 
 		for (String t : args) {
-			message.getFactoidsObject().remove(t);
+			message.getFactoidsObject().delete(t);
 
 			if (!message.isFromOwner()) //only let me remove more than one factoid
 				break;

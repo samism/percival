@@ -16,11 +16,11 @@ import java.util.List;
 public class FunctionalMessage extends IRCMessage {
 	private static final Logger log = LoggerFactory.getLogger(FunctionalMessage.class);
 
-	private final Factoids facts;
+	private final FactoidsJDBC facts;
 
 	public final List<Function> functionObjects = new ArrayList<>();
 
-	public FunctionalMessage(String s, PercivalBot pc, Factoids facts) {
+	public FunctionalMessage(String s, PercivalBot pc, FactoidsJDBC facts) {
 		super(s, pc);
 		this.facts = facts;
 
@@ -32,7 +32,7 @@ public class FunctionalMessage extends IRCMessage {
 		functionObjects.add(new ISOCodesFunction(this));
 		functionObjects.add(new URLEncodeFunction(this));
 		functionObjects.add(new URLDecodeFunction(this));
-		functionObjects.add(new AddFactoidFunction(this));
+		functionObjects.add(new AddFactoidFunction(this, author));
 		functionObjects.add(new RemoveFactoidFunction(this));
 		functionObjects.add(new TranslateFunction(this));
 		functionObjects.add(new GreetFunction(this));
@@ -62,7 +62,7 @@ public class FunctionalMessage extends IRCMessage {
 		return this.functionObjects;
 	}
 
-	public Factoids getFactoidsObject() {
+	public FactoidsJDBC getFactoidsObject() {
 		return this.facts;
 	}
 }
