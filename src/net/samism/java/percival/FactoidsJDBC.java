@@ -26,8 +26,8 @@ public final class FactoidsJDBC {
 
 	private static final String INSERT_QUERY = "INSERT INTO factoids (id, date_created, author, hook, response)" +
 			"VALUES (?,?,?,?,?)";
-	private static final String DELETE_QUERY = "DELETE FROM factoids WHERE hook='~'";
-	private static final String SELECT_QUERY = "SELECT hook,date_created,author,response FROM factoids WHERE hook='~'";
+	private static final String DELETE_QUERY = "DELETE FROM factoids WHERE hook=?";
+	private static final String SELECT_QUERY = "SELECT hook,date_created,author,response FROM factoids WHERE hook=?";
 	private static final String SELECT_TRIGGERS_QUERY = "SELECT hook FROM factoids";
 	//private static final String SELECT_ALL_QUERY = "SELECT * FROM factoids"; //probably for use with tests...
 
@@ -61,16 +61,16 @@ public final class FactoidsJDBC {
 	}
 
 	public final Factoid select(String hook) {
-		String query = SELECT_QUERY.replace("~", hook);
+		try (PreparedStatement statement = db_conn.prepareStatement(SELECT_QUERY)) {
+			statement.setString(1, hook); //prevent security issues with sql
 
-		try (Statement s = db_conn.createStatement();
-			 ResultSet results = s.executeQuery(query)) {
-
-			if (results.next()) {
-				return new Factoid(results.getString("author"),
-						results.getString("hook"),
-						results.getString("response"),
-						results.getDate("date_created"));
+			try (ResultSet results = statement.executeQuery()) {
+				if (results.next()) {
+					return new Factoid(results.getString("author"),
+							results.getString("hook"),
+							results.getString("response"),
+							results.getDate("date_created"));
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -80,10 +80,9 @@ public final class FactoidsJDBC {
 	}
 
 	public final void delete(String hook) {
-		String query = DELETE_QUERY.replace("~", hook);
-
-		try (Statement s = db_conn.createStatement()) {
-			s.executeUpdate(query);
+		try (PreparedStatement statement = db_conn.prepareStatement(DELETE_QUERY)) {
+			statement.setString(1, hook);
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -93,7 +92,7 @@ public final class FactoidsJDBC {
 	}
 
 	private void loadTriggers() {
-		try (Statement s = db_conn.createStatement();
+		try (Statement s = db_conn.createStatement(); //no PreparedStatement needed bc the query is hardcoded by me
 			 ResultSet results = s.executeQuery(SELECT_TRIGGERS_QUERY)) { //query db for all rows' value for `hook`
 
 			triggers.clear();

@@ -3,6 +3,7 @@ package net.samism.java.percival.functions;
 import net.samism.java.percival.FunctionalMessage;
 import net.samism.java.percival.IRCRegex;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +27,10 @@ public class RemoveFactoidFunction extends Function {
 		args.remove(0); //get rid of actual command
 		int num = args.size(); //initial number of factoids requested to be removed
 
+		ArrayList<String> triggers = message.getFactoidsObject().getTriggers();
 		for (String t : args) {
-			message.getFactoidsObject().delete(t);
+			if(triggers.contains(t))
+				message.getFactoidsObject().delete(t);
 
 			if (!message.isFromOwner()) //only let me remove more than one factoid
 				break;
