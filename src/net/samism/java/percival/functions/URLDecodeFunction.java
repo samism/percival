@@ -29,7 +29,7 @@ public class URLDecodeFunction extends Function {
 	public String perform() {
 		try {
 			return StringUtils.decodeCompletely(line, encoding == null ? "utf-8" : encoding);
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException e) {
 			e.printStackTrace();
 			return "Could not decode that string with " + encoding;
 		}
