@@ -31,7 +31,7 @@ public class URLDecodeFunction extends Function {
 			return StringUtils.decodeCompletely(line, encoding == null ? "utf-8" : encoding);
 		} catch (UnsupportedEncodingException | IllegalArgumentException e) {
 			e.printStackTrace();
-			return "Could not decode that string with " + encoding;
+			return "Could not decode that string" + (encoding == null ? ". " : " with " + encoding + ".");
 		}
 	}
 

@@ -19,12 +19,11 @@ public final class FactoidsJDBC {
 
 	private static Connection conn;
 
-	private static final String INSERT_QUERY = "INSERT INTO factoids (id, date_created, author, hook, response)" +
-			"VALUES (?,?,?,?,?)";
+	private static final String INSERT_QUERY =
+			"INSERT INTO factoids (id, date_created, author, hook, response) VALUES (?,?,?,?,?)";
 	private static final String DELETE_QUERY = "DELETE FROM factoids WHERE hook=?";
 	private static final String SELECT_QUERY = "SELECT hook,date_created,author,response FROM factoids WHERE hook=?";
 	private static final String SELECT_TRIGGERS_QUERY = "SELECT hook FROM factoids";
-	//private static final String SELECT_ALL_QUERY = "SELECT * FROM factoids"; //probably for use with tests...
 
 	private ArrayList<String> triggers = new ArrayList<>();
 
@@ -94,7 +93,7 @@ public final class FactoidsJDBC {
 		try (Statement s = conn.createStatement(); //no PreparedStatement needed bc the query is hardcoded by me
 			 ResultSet results = s.executeQuery(SELECT_TRIGGERS_QUERY)) { //query db for all rows' value for `hook`
 
-			triggers.clear();
+			triggers.clear(); //out with the old, in with the new
 
 			while (results.next()) {
 				triggers.add(results.getString("hook"));
@@ -102,19 +101,6 @@ public final class FactoidsJDBC {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private String aggregateToRegex() {
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < triggers.size(); i++) { //convert arraylist to a regex string
-			if (i == triggers.size() - 1)
-				sb.append(triggers.get(i));
-			else
-				sb.append(triggers.get(i)).append("|");
-		}
-
-		return sb.toString();
 	}
 
 	public final String containsTrigger(String line) {
@@ -143,6 +129,19 @@ public final class FactoidsJDBC {
 		}
 
 		return null;
+	}
+
+	private String aggregateToRegex() {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < triggers.size(); i++) { //convert arraylist to a regex-formatted string
+			if (i == triggers.size() - 1)
+				sb.append(triggers.get(i));
+			else
+				sb.append(triggers.get(i)).append("|");
+		}
+
+		return sb.toString();
 	}
 
 	public ArrayList<String> getTriggers() {
