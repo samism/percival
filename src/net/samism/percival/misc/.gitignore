@@ -1,6 +1,4 @@
 # Ignore everything in this directory
-factoids.json
+*.properties
 # Except this file
 !.gitignore
-!percy-config
-!factoids.json

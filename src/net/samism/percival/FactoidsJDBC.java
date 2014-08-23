@@ -1,6 +1,5 @@
 package net.samism.percival;
 
-import net.samism.percival.util.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +17,7 @@ import java.util.regex.Pattern;
 public final class FactoidsJDBC {
 	private static final Logger log = LoggerFactory.getLogger(FactoidsJDBC.class);
 
-	private static Connection db_conn;
-
-	private final String FACTOIDS_DB_URL = "jdbc:mysql://samism.net:3306/percival";
-	private final String FACTOIDS_DB_USERNAME;
-	private final String FACTOIDS_DB_PASSWORD;
+	private static Connection conn;
 
 	private static final String INSERT_QUERY = "INSERT INTO factoids (id, date_created, author, hook, response)" +
 			"VALUES (?,?,?,?,?)";
@@ -34,25 +29,29 @@ public final class FactoidsJDBC {
 	private ArrayList<String> triggers = new ArrayList<>();
 
 	FactoidsJDBC() { //default modifier! more protection!
-		String config = File.loadText(getClass(), PercivalBot.CONFIG_FILE_PATH); //load sensitive info externally
-		FACTOIDS_DB_USERNAME = config.split(" ")[1];
-		FACTOIDS_DB_PASSWORD = config.split(" ")[2];
+		try {
+			conn = DriverManager.getConnection(
+					Application.FACTOIDS_DB_URL,
+					Application.FACTOIDS_DB_USERNAME,
+					Application.FACTOIDS_DB_PASSWORD);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-		connect();
 		loadTriggers();
 	}
 
 	public final void insert(Factoid f) {
-		try (PreparedStatement s = db_conn.prepareStatement(INSERT_QUERY)) {
-			s.setNull(1, Types.INTEGER);
-			s.setDate(2, f.getDateCreated());
-			s.setString(3, f.getAuthor());
-			s.setString(4, f.getTrigger());
-			s.setString(5, f.getResponse());
+		try (PreparedStatement statement = conn.prepareStatement(INSERT_QUERY)) {
+			statement.setNull(1, Types.INTEGER);
+			statement.setDate(2, f.getDateCreated());
+			statement.setString(3, f.getAuthor());
+			statement.setString(4, f.getTrigger());
+			statement.setString(5, f.getResponse());
 
-			s.executeUpdate();
+			statement.executeUpdate();
 
-			log.info("Factoid for '" + f.getTrigger() + "' added to table.");
+			log.info("Factoid for '{}' added to table.", f.getTrigger());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +60,7 @@ public final class FactoidsJDBC {
 	}
 
 	public final Factoid select(String hook) {
-		try (PreparedStatement statement = db_conn.prepareStatement(SELECT_QUERY)) {
+		try (PreparedStatement statement = conn.prepareStatement(SELECT_QUERY)) {
 			statement.setString(1, hook); //prevent security issues with sql
 
 			try (ResultSet results = statement.executeQuery()) {
@@ -80,7 +79,7 @@ public final class FactoidsJDBC {
 	}
 
 	public final void delete(String hook) {
-		try (PreparedStatement statement = db_conn.prepareStatement(DELETE_QUERY)) {
+		try (PreparedStatement statement = conn.prepareStatement(DELETE_QUERY)) {
 			statement.setString(1, hook);
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -88,11 +87,11 @@ public final class FactoidsJDBC {
 		}
 
 		loadTriggers();
-		log.info("Factoid for '" + hook + "' removed from table.");
+		log.info("Factoid for '{}' removed from table.", hook);
 	}
 
 	private void loadTriggers() {
-		try (Statement s = db_conn.createStatement(); //no PreparedStatement needed bc the query is hardcoded by me
+		try (Statement s = conn.createStatement(); //no PreparedStatement needed bc the query is hardcoded by me
 			 ResultSet results = s.executeQuery(SELECT_TRIGGERS_QUERY)) { //query db for all rows' value for `hook`
 
 			triggers.clear();
@@ -144,14 +143,6 @@ public final class FactoidsJDBC {
 		}
 
 		return null;
-	}
-
-	private void connect() {
-		try {
-			db_conn = DriverManager.getConnection(FACTOIDS_DB_URL, FACTOIDS_DB_USERNAME, FACTOIDS_DB_PASSWORD);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public ArrayList<String> getTriggers() {

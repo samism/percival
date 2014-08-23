@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
-import static net.samism.percival.util.File.loadText;
 
 
 /**
@@ -26,10 +25,9 @@ public final class PercivalBot extends IRCBot {
 	private final FactoidsJDBC facts = new FactoidsJDBC();
 
 	private boolean shouldDie = false;
-	private String identPass = loadText(getClass(), CONFIG_FILE_PATH).split(" ")[0];
 
 	public PercivalBot(String serverName, String[] channels, int port) throws IOException {
-		super(BOT_NAME, serverName, channels, port);
+		super(serverName, channels, port);
 
 		connect(this);
 		connection.start();
@@ -96,10 +94,6 @@ public final class PercivalBot extends IRCBot {
 			rawLine = StringEscapeUtils.escapeJava(rawLine);
 			return rawLine;
 		}
-	}
-
-	public String getIdentPass() {
-		return this.identPass;
 	}
 
 	public void setShouldDie(boolean shouldIt) {

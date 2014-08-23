@@ -29,9 +29,9 @@ public class ServerMessage extends IRCMessage {
 				return "PONG " + msg.split(":")[1];
 			}
 		} else if (rawMsg.contains("End of /MOTD command.")) {
-			return "MODE " + pc.getBotName() + " +B"; // for bots
+			return "MODE " + PercivalBot.BOT_NAME + " +B"; // for bots
 		} else if (rawMsg.contains("This nickname is registered.")) {
-			return "PRIVMSG NickServ :identify " + pc.getIdentPass();
+			return "PRIVMSG NickServ :identify " + Application.IDENT_PASS;
 		} else if (rawMsg.contains(":You are now identified")) {
 			String join = "";
 

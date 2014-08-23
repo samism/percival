@@ -21,7 +21,6 @@ public class IRCBot implements IRCFunctions {
 
 	public static final String OWNER = "ffs82defxp";
 	public static final String NL = "\r\n";
-	public static final String CONFIG_FILE_PATH = "misc/percy.config";
 	public static final String BOT_NAME = "Percival";
 	public static final String BOT_COMMAND_PREFIX = "p.";
 
@@ -35,7 +34,6 @@ public class IRCBot implements IRCFunctions {
 //		fw = null;
 //	}
 
-	private String botName;
 	private String serverName;
 	private int port;
 
@@ -46,13 +44,12 @@ public class IRCBot implements IRCFunctions {
 	private List<String> channels = new ArrayList<>();
 	private volatile String currentChannel;
 
-	public IRCBot(String botName, String serverName, String[] channels, int port) {
-		this.botName = botName;
+	public IRCBot(String serverName, String[] channels, int port) {
 		this.serverName = serverName;
 		this.port = port;
 
 		Collections.addAll(this.channels, channels);
-		this.currentChannel = this.channels.get(0); //for now. todo: how to determine which channel is the "current"?
+		this.currentChannel = this.channels.get(0); //for now.
 	}
 
 	@Override
@@ -151,10 +148,6 @@ public class IRCBot implements IRCFunctions {
 		return this.serverName;
 	}
 
-	public String getBotName() {
-		return this.botName;
-	}
-
 	public BufferedReader getBr() {
 		return this.br;
 	}
@@ -165,7 +158,6 @@ public class IRCBot implements IRCFunctions {
 
 	public Socket getIRCSocket() {
 		return this.irc;
-
 	}
 
 	public List<String> getChannels() {
