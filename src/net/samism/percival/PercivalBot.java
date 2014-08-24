@@ -41,7 +41,7 @@ public final class PercivalBot extends IRCBot {
 				send("NICK " + BOT_NAME);
 				send("USER " + BOT_NAME + " 0 * :" + BOT_NAME);
 
-				while (true) { //if its null, thread dies
+				while (true) {
 					final String rawLine = pc.getBr().readLine();
 
 					if (rawLine == null || shouldDie)

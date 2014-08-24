@@ -43,12 +43,13 @@ public class ServerMessage extends IRCMessage {
 	@Override
 	public String getResponse() {
 		switch (this.currentType) {
-			case PING:
+			case PING: {
 				if (msg.contains(":")) {
 					return "PONG " + msg.split(" ")[1];
 				} else {
 					return "PONG " + msg.split(":")[1];
 				}
+			}
 			case MOTD:
 				return "MODE " + PercivalBot.BOT_NAME + " +B"; // for bots
 			case IDENTIFY:
@@ -67,29 +68,6 @@ public class ServerMessage extends IRCMessage {
 			default:
 				return null; //should never get here.
 		}
-//		if (rawMsg.startsWith("PING ")) {
-//			if (msg.contains(":")) {
-//				return "PONG " + msg.split(" ")[1];
-//			} else {
-//				return "PONG " + msg.split(":")[1];
-//			}
-//		} else if (rawMsg.contains("End of /MOTD command.")) {
-//			return "MODE " + PercivalBot.BOT_NAME + " +B"; // for bots
-//		} else if (rawMsg.contains("This nickname is registered.")) {
-//			return "PRIVMSG NickServ :identify " + Application.IDENT_PASS;
-//		} else if (rawMsg.contains(":You are now identified")) {
-//			String join = "";
-//
-//			for (String channel : PercivalBot.CHANNELS) { //join all channels for this network
-//				join += "JOIN " + channel;
-//				if(PercivalBot.CHANNELS.size() > 1)
-//					join += PercivalBot.NL;
-//			}
-//
-//			return join;
-//	}
-
-//	return null;
 	}
 
 	@Override
