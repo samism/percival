@@ -47,7 +47,7 @@ public final class PercivalBot extends IRCBot {
 					if (rawLine == null || shouldDie)
 						break;
 
-					logConsole(">>>" + rawLine); //logs to the console immediately
+					log(">>>" + rawLine); //logs to the console immediately
 
 					IRCMessage msg;
 

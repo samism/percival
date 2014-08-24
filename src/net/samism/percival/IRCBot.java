@@ -26,16 +26,6 @@ public class IRCBot implements IRCFunctions {
 
 	public static final List<String> CHANNELS = new ArrayList<>();
 
-	private static final File LOGS_DIR = new File("logs"); // logs directory
-	private static final File LOG_FILE = new File("log"); // file
-
-	private static final FileWriter fw = null;
-
-//	static {
-//		//todo: figure out FileWriter stuff
-//		fw = null;
-//	}
-
 	private String serverName;
 	private int port;
 
@@ -65,14 +55,14 @@ public class IRCBot implements IRCFunctions {
 
 	@Override
 	public void send(String msg) throws IOException {
-		logConsole("<<<" + msg);
+		log("<<<" + msg);
 		bw.write(msg + NL);
 		bw.flush();
 	}
 
 	@Override
 	public void sendChannel(String msg, String channel) throws IOException {
-		logConsole("<<<" + msg);
+		log("<<<" + msg);
 		bw.write("PRIVMSG " + channel + " :" + msg + NL);
 		bw.flush();
 	}
@@ -98,33 +88,8 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void logConsole(String line) {
+	public void log(String line) {
 		log.info(line);
-	}
-
-	@Override
-	public final void log(String line) {
-		//todo: Get file logging working.
-		logConsole(line);
-
-		//todo: write to a file
-
-		if (!isFileEmpty()) {
-			//do stuff provided file has been appended to already
-		} else {
-		}
-
-	}
-
-	private boolean isFileEmpty() {
-		boolean isEmpty = false;
-		try (BufferedReader br = new BufferedReader(new FileReader(LOG_FILE.getPath()))) {
-			isEmpty = br.readLine() == null;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return isEmpty;
 	}
 
 	public String getServerName() {

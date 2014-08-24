@@ -56,9 +56,9 @@ public final class Application {
 			bots.add(new PercivalBot("irc.foonetic.net",
 					new String[]{"#test"/*, "#lingubender", "#ministryofsillywalks"*/},
 					6667));
-			bots.add(new PercivalBot("irc.awfulnet.org",
-					new String[]{"#programming"/*, "#fitness"*/},
-					6667));
+//			bots.add(new PercivalBot("irc.awfulnet.org",
+//					new String[]{"#programming", "#fitness"},
+//					6667));
 //			bots.add(new PercivalBot("irc.freenode.net",
 // 					new String[]{"##java, #git, #regex, #znc"},
 // 					6667));

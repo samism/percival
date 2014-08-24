@@ -23,7 +23,5 @@ public interface IRCFunctions {
 
 	void leaveChannel(String partMsg) throws IOException;
 
-	void logConsole(String line);
-
 	void log(String line);
 }
