@@ -22,12 +22,12 @@ import static net.samism.percival.util.File.loadText;
  * Date: 7/25/14
  * Time: 12:39 AM
  *
- * @deprecated <p/>
+ * @deprecated Use FactoidsJDBC<p/>
  * This file handles everything having to do with triggers.
- * <p/>
+ * <p>
  * It loads (later will be able to append) triggers from a JSON file - facts.json.
  */
-public final class FactoidsJSON {
+final class FactoidsJSON {
 	private static final Logger log = LoggerFactory.getLogger(FactoidsJSON.class);
 	private static final String PATH_TO_JSON = "misc/factoids.json";
 	private File FACTOIDS_JSON_FILE;
@@ -35,7 +35,7 @@ public final class FactoidsJSON {
 	private final JSONObject facts = loadJSON(PATH_TO_JSON);
 	private final Set<String> triggers = facts.keySet();
 
-	public FactoidsJSON() {
+	private FactoidsJSON() { //Can't be instantiated
 		try {
 			FACTOIDS_JSON_FILE = new File(getClass().getResource(PATH_TO_JSON).toURI());
 		} catch (URISyntaxException e) {

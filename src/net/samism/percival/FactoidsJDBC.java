@@ -93,7 +93,8 @@ public final class FactoidsJDBC {
 		try (Statement s = conn.createStatement(); //no PreparedStatement needed bc the query is hardcoded by me
 			 ResultSet results = s.executeQuery(SELECT_TRIGGERS_QUERY)) { //query db for all rows' value for `hook`
 
-			triggers.clear(); //out with the old, in with the new
+			if (triggers.size() > 0)
+				triggers.clear(); //out with the old, in with the new
 
 			while (results.next()) {
 				triggers.add(results.getString("hook"));

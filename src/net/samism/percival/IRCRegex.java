@@ -5,9 +5,9 @@ package net.samism.percival;
  * User: samism
  * Date: 8/19/14
  * Time: 8:38 PM
- * <p/>
+ * <p>
  * Immutable class intended to be used when trying to match a line of IRC input to a regex.
- * <p/>
+ * <p>
  * Instead of forgetting to put ^ and $ at the end of the regex, and other potential things appropriate
  * for a line of IRC input, this object can be used.
  */
