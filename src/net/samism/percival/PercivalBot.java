@@ -1,6 +1,5 @@
 package net.samism.percival;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,10 +17,7 @@ import static net.samism.java.StringUtils.StringUtils.nthIndexOf;
 public final class PercivalBot extends IRCBot {
 	private static final Logger log = LoggerFactory.getLogger(PercivalBot.class);
 
-	private final Connection c = new PercivalBot.Connection(this);
-	private final Thread connection = new Thread(c);
-
-	//private final FactoidsJSON facts = new FactoidsJSON();
+	private final Thread loop = new Thread(new IRCLoop(this));
 	private final FactoidsJDBC facts = new FactoidsJDBC();
 
 	private boolean shouldDie = false;
@@ -30,13 +26,13 @@ public final class PercivalBot extends IRCBot {
 		super(serverName, channels, port);
 
 		connect(this);
-		connection.start();
+		loop.start();
 	}
 
-	class Connection implements Runnable {
+	class IRCLoop implements Runnable {
 		private PercivalBot pc;
 
-		public Connection(PercivalBot pc) {
+		public IRCLoop(PercivalBot pc) {
 			this.pc = pc;
 		}
 
@@ -45,33 +41,34 @@ public final class PercivalBot extends IRCBot {
 				send("NICK " + BOT_NAME);
 				send("USER " + BOT_NAME + " 0 * :" + BOT_NAME);
 
-				String rawLine;
+				while (true) { //if its null, thread dies
+					final String rawLine = pc.getBr().readLine();
 
-				while ((rawLine = pc.getBr().readLine()) != null && !shouldDie) { //if its null, thread dies
+					if (rawLine == null || shouldDie)
+						break;
+
 					logConsole(">>>" + rawLine); //logs to the console immediately
 
 					IRCMessage msg;
 
-					//todo: fix bug where only responds to the first channel.
-					//modifying the currentChannel variable might not be threadsafe.
-					//Should there be a new instance of PercivalBot for each channel instead of just for each network?
-					//Nested threads?
-					if (rawLine.contains("PRIVMSG " + getCurrentChannelName())) {
-						//if (rawLine.contains("PRIVMSG ")) {
-						String cleanedLine = cleanLine(rawLine);
-						String trigger = facts.containsTrigger(cleanedLine);
+					if (rawLine.contains("PRIVMSG #")) {
+						String cleanLine = rawLine.substring(nthIndexOf(rawLine, ":", 2) + 1); //no meta data
+						String trigger = facts.containsTrigger(cleanLine);
 
-						if (cleanedLine.startsWith(BOT_COMMAND_PREFIX)) {
-							msg = new FunctionalMessage(rawLine, pc, facts);
-							sendChannel(msg.getResponse());
-						} else if (trigger != null) {
-							msg = new FactoidMessage(rawLine, trigger, pc, facts);
-							sendChannel(msg.getResponse());
+						if (cleanLine.startsWith(BOT_COMMAND_PREFIX)) {
+							msg = new FunctionalMessage(rawLine, pc);
+						} else if (!trigger.isEmpty()) {
+							msg = new FactoidMessage(rawLine, trigger, pc);
+						} else {
+							continue;
 						}
+
+						sendChannel(msg.getResponse(), msg.getChannel());
 					} else {
-						msg = new ServerMessage(rawLine, pc);
-						if (msg.getResponse() != null)
-							pc.send(msg.getResponse());
+						msg = new ServerMessage(rawLine);
+
+						if (((ServerMessage) msg).shouldRespondTo(rawLine))
+							send(msg.getResponse());
 					}
 				}
 			} catch (IOException e) {
@@ -88,19 +85,13 @@ public final class PercivalBot extends IRCBot {
 				}
 			}
 		}
-
-		private String cleanLine(String rawLine) {
-			rawLine = rawLine.substring(nthIndexOf(rawLine, ":", 2) + 1);
-			rawLine = StringEscapeUtils.escapeJava(rawLine);
-			return rawLine;
-		}
 	}
 
 	public void setShouldDie(boolean shouldIt) {
 		this.shouldDie = shouldIt;
 	}
 
-	public Thread getConnection() {
-		return this.connection;
+	public FactoidsJDBC getFactoidsObject() {
+		return this.facts;
 	}
 }

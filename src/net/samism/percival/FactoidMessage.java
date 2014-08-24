@@ -15,9 +15,9 @@ public class FactoidMessage extends IRCMessage {
 	private FactoidsJDBC facts;
 	private String trigger;
 
-	public FactoidMessage(String s, String trigger, PercivalBot pc, FactoidsJDBC facts) {
+	public FactoidMessage(String s, String trigger, PercivalBot pc) {
 		super(s, pc);
-		this.facts = facts;
+		this.facts = pc.getFactoidsObject();
 		this.trigger = trigger;
 	}
 

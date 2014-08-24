@@ -19,10 +19,12 @@ import java.util.List;
 public class IRCBot implements IRCFunctions {
 	private static final Logger log = LoggerFactory.getLogger(IRCBot.class);
 
-	public static final String OWNER = "ffs82defxp";
-	public static final String NL = "\r\n";
 	public static final String BOT_NAME = "Percival";
 	public static final String BOT_COMMAND_PREFIX = "p.";
+	public static final String OWNER = "ffs82defxp";
+	public static final String NL = "\r\n";
+
+	public static final List<String> CHANNELS = new ArrayList<>();
 
 	private static final File LOGS_DIR = new File("logs"); // logs directory
 	private static final File LOG_FILE = new File("log"); // file
@@ -41,15 +43,11 @@ public class IRCBot implements IRCFunctions {
 	private BufferedWriter bw;
 	private BufferedReader br;
 
-	private List<String> channels = new ArrayList<>();
-	private volatile String currentChannel;
-
 	public IRCBot(String serverName, String[] channels, int port) {
 		this.serverName = serverName;
 		this.port = port;
 
-		Collections.addAll(this.channels, channels);
-		this.currentChannel = this.channels.get(0); //for now.
+		Collections.addAll(IRCBot.CHANNELS, channels);
 	}
 
 	@Override
@@ -73,13 +71,6 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void sendChannel(String msg) throws IOException {
-		logConsole("<<<" + msg);
-		bw.write("PRIVMSG " + currentChannel + " :" + msg + NL);
-		bw.flush();
-	}
-
-	@Override
 	public void sendChannel(String msg, String channel) throws IOException {
 		logConsole("<<<" + msg);
 		bw.write("PRIVMSG " + channel + " :" + msg + NL);
@@ -92,13 +83,13 @@ public class IRCBot implements IRCFunctions {
 	}
 
 	@Override
-	public void leaveChannel() throws IOException {
-		send("PART " + currentChannel);
+	public void leaveChannel(String channel) throws IOException {
+		send("PART " + channel);
 	}
 
 	@Override
-	public void leaveChannel(String partMsg) throws IOException {
-		send("PART " + currentChannel + " " + partMsg);
+	public void leaveChannel(String partMsg, String channel) throws IOException {
+		send("PART " + channel + " " + partMsg);
 	}
 
 	@Override
@@ -136,14 +127,6 @@ public class IRCBot implements IRCFunctions {
 		return isEmpty;
 	}
 
-	public void setCurrentChannelName(String channelName) {
-		this.currentChannel = channelName;
-	}
-
-	public String getCurrentChannelName() {
-		return this.currentChannel;
-	}
-
 	public String getServerName() {
 		return this.serverName;
 	}
@@ -158,9 +141,5 @@ public class IRCBot implements IRCFunctions {
 
 	public Socket getIRCSocket() {
 		return this.irc;
-	}
-
-	public List<String> getChannels() {
-		return this.channels;
 	}
 }

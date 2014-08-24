@@ -13,17 +13,15 @@ public interface IRCFunctions {
 
 	void send(String msg) throws IOException;
 
-	void sendChannel(String msg) throws IOException;
-
 	void sendChannel(String msg, String channel) throws IOException;
 
 	void join(String chan) throws IOException;
 
 	void leaveAllChannels() throws IOException;
 
-	void leaveChannel(String partMsg) throws IOException;
+	void leaveChannel(String partMsg, String channel) throws IOException;
 
-	void leaveChannel() throws IOException;
+	void leaveChannel(String partMsg) throws IOException;
 
 	void logConsole(String line);
 

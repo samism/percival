@@ -1,11 +1,13 @@
 package net.samism.percival;
 
+import net.samism.java.StringUtils.StringUtils;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: Sameer Ismail
  * Date: 7/29/2014
  * Time: 4:03 AM
- * <p/>
+ * <p>
  * Types of possible messages:
  * -command message (respond with response to command from JSON)
  * -ping message (respond with "PONG")
@@ -13,21 +15,24 @@ package net.samism.percival;
  * -a message that is none of the above (casual message)?
  */
 public abstract class IRCMessage {
-	final PercivalBot pc;
-
-	final String msg, rawMsg, author;
+	final String msg;
+	final String rawMsg;
+	final String author;
+	final String channel;
 
 	public IRCMessage(String s, PercivalBot pc) {
-		this.pc = pc;
 		this.rawMsg = s;
 
-		if (rawMsg.contains("PRIVMSG " + pc.getCurrentChannelName())) {
-			this.author = rawMsg.substring(1).split("!")[0];
-			this.msg = s.split("PRIVMSG " + pc.getCurrentChannelName() + " :")[1];
-		} else {
-			this.author = "Server";
-			this.msg = rawMsg;
-		}
+		this.author = rawMsg.substring(1).split("!")[0];
+		this.channel = rawMsg.substring(rawMsg.indexOf("#"), StringUtils.nthIndexOf(rawMsg, ":", 2) - 1);
+		this.msg = rawMsg.split("PRIVMSG " + this.channel + " :")[1];
+	}
+
+	//for ServerMessage
+	public IRCMessage(String s) {
+		this.author = "Server";
+		this.msg = this.rawMsg = s;
+		this.channel = "";
 	}
 
 	public boolean isFrom(String author) {
@@ -35,7 +40,7 @@ public abstract class IRCMessage {
 	}
 
 	public boolean isFromOwner() {
-		return author.equals(PercivalBot.OWNER);
+		return this.author.equals(PercivalBot.OWNER);
 	}
 
 	public String getAuthor() {
@@ -43,11 +48,15 @@ public abstract class IRCMessage {
 	}
 
 	public String getMsg() {
-		return msg;
+		return this.msg;
 	}
 
 	public String getRawMsg() {
-		return rawMsg;
+		return this.rawMsg;
+	}
+
+	public String getChannel() {
+		return this.channel;
 	}
 
 	//override this if response depends on a variable

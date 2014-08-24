@@ -27,10 +27,11 @@ public final class Application {
 	public static final String IDENT_PASS;
 
 	static {
+		//load credentials for jdbc & ident
+
 		Properties props = new Properties();
 
 		try {
-			//load credentials for jdbc
 			props.load(Application.class.getResourceAsStream("misc/percival.properties"));
 
 		} catch (IOException e) {
@@ -55,14 +56,15 @@ public final class Application {
 			bots.add(new PercivalBot("irc.foonetic.net",
 					new String[]{"#test"/*, "#lingubender", "#ministryofsillywalks"*/},
 					6667));
-//			bots.add(new PercivalBot("irc.awfulnet.org",
-//					new String[]{"#programming"/*, "#fitness"*/},
-//					6667));
+			bots.add(new PercivalBot("irc.awfulnet.org",
+					new String[]{"#programming"/*, "#fitness"*/},
+					6667));
 //			bots.add(new PercivalBot("irc.freenode.net",
-// 						new String[]{"##java, #git, #regex, #znc"},
-// 						6667));
+// 					new String[]{"##java, #git, #regex, #znc"},
+// 					6667));
 //			bots.add(new PercivalBot("irc.strictfp.com",
-// 						new String[]{"#rscode"},
+// 					new String[]{"#rscode"},
+//					6667));
 //
 		} catch (IOException e) {
 			e.printStackTrace();

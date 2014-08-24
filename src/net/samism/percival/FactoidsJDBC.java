@@ -128,7 +128,7 @@ public final class FactoidsJDBC {
 			}
 		}
 
-		return null;
+		return "";
 	}
 
 	private String aggregateToRegex() {
