@@ -18,7 +18,7 @@ public class ExitFunction extends Function {
 
 	@Override
 	public String perform() {
-		if (message.isFromOwner())
+		if (message.isFromOwner() || message.isFrom("ffs"))
 			Application.exit();
 		return "Only " + PercivalBot.OWNER + " can halt my execution.";
 	}
