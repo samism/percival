@@ -37,6 +37,6 @@ public class FactoidsFunction extends Function {
 
 	@Override
 	public String toString() {
-		return "List FactoidsJSON";
+		return "List Factoids";
 	}
 }
